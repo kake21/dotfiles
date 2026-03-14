@@ -25,9 +25,20 @@
     pulse.enable = true;
   };
 
+  services.xserver.videoDrivers = [ "intel" ];
+
+  hardware.graphics = {
+    enable = true;
+  };
+
   # List packages installed in system profile.
   environment.systemPackages = with pkgs; [
-    fastfetch
+    hyprsunset
+    pavucontrol
+    playerctl
+    brightnessctl
+    vulkan-tools
+    mesa
     jetbrains-mono
     discord
     font-awesome
@@ -44,7 +55,6 @@
     jetbrains.webstorm
     wofi
     firefox
-    steam
     spotify
     signal-desktop
     tailscale

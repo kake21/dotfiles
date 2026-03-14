@@ -9,6 +9,7 @@
     ./modules/networking.nix
     ./modules/users.nix
     ./modules/desktop.nix
+    ./modules/steam.nix
   ];
 }
 

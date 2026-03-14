@@ -13,25 +13,48 @@
 
   wayland.windowManager.hyprland = {
     enable = true;
+
     settings = {
       "$mod" = "SUPER";
 
-    monitor = [
-        "eDP-1,1920x1080@59.988,0x0,1"
-    ];
+      monitor = [
+          "HDMI-A-1, 5120x1440@60.00,0x0,1"
+          "DP-4,3840x2160@60,640x-2160,1"
+          "eDP-1,1920x1080@59.988,-1920x360,1"
+          #"DP-5,5120x1440@60.00,1920x0,1"
+      ];
 
-    input = {
-      kb_layout = "no";
-    };
+      input = {
+          kb_layout = "no";
+      };
 
       general = {
         gaps_in = 5;
         gaps_out = 5;
         border_size = 0;
+        layout = "dwindle";
       };
+
+      exec-once = [
+        "hyprsunset"
+      ];
+
       decoration = {
-        rounding = 10;
+        rounding = 16;
       };
+
+      master = {
+          new_status = "master";
+          mfact = 0.5;
+          orientation = "center";
+      };
+
+      workspace = [
+          "1, monitor:HDMI-A-1, default:true, layout:master"
+          "2, monitor:DP-4, layout:dwindle"
+          "3, monitor:eDP-1, layout:dwindle"
+      ];
+
       bind =
         [
           "$mod, F, exec, firefox"
@@ -66,27 +89,29 @@
           # Fullscreen
           "$mod, RETURN, fullscreen"
 
-        ]
-        ++ (
-          # workspaces
-          # binds $mod + [shift +] {1..10} to [move to] workspace {1..10}
-          builtins.concatLists (builtins.genList (
-              x: let
-                ws = let
-                  c = (x + 1) / 10;
-                in
-                  builtins.toString (x + 1 - (c * 10));
-              in [
-                "$mod, ${ws}, workspace, ${toString (x + 1)}"
-                "$mod SHIFT, ${ws}, movetoworkspace, ${toString (x + 1)}"
-              ]
-            )
-            10)
-        );
+          # Media keys (using pamixer and playerctl)
+          ", XF86AudioRaiseVolume, exec, pamixer -i 1"
+          ", XF86AudioLowerVolume, exec, pamixer -d 1"
+          ", XF86AudioMute, exec, pamixer -t"
+          ", XF86AudioPlay, exec, playerctl play-pause"
+          ", XF86AudioNext, exec, playerctl next"
+          ", XF86AudioPrev, exec, playerctl previous"
+          ", XF86AudioMicMute, exec, pamixer --default-source -t"
+          ", XF86MonBrightnessUp, exec, brightnessctl set 5%+"
+          ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
+        ];
+
+      bindm = [
+          "$mod, mouse:272, movewindow"
+          "$mod, mouse:273, resizewindow"
+      ];
     };
   };
 
   programs.firefox.profiles.vegard = {
+    search = {
+      default = "DuckDuckGo";
+    };
     extensions.packages = with pkgs.firefoxExtensions; [
       ublock-origin
       darkreader
@@ -108,4 +133,81 @@
       size = 11;
     };
   };
+
+  xdg.configFile."hypr/hyprsunset.conf".text = ''
+      max-gamma = 150
+
+      profile {
+          time = 07:30
+          identity = true
+      }
+
+      profile {
+          time = 19:00
+          temperature = 3700
+          gamma = 0.8
+      }
+  '';
+
+
+    programs.fastfetch = {
+      enable = true;
+
+      settings = {
+        logo = {
+          type = "builtin";
+          source = [
+            "::::.    ':::::      ::::"
+            "::::'      :::::     ::::"
+            "::::.        :::::   ::::"
+            "::::'          ::::: ::::"
+            "::::.            ::::::::"
+            "::::'          ::::: ::::"
+            "::::.        :::::   ::::"
+            "::::'      :::::     ::::"
+            "::::.    :::::       ::::"
+          ];
+          padding.right = 2;
+        };
+
+        display = {
+          separator = "  ";
+          color = "blue";
+          size.maxPrefix = "GB";
+        };
+
+        modules = [
+          "title"
+          "separator"
+
+          "os"
+          "host"
+          "kernel"
+          "uptime"
+          "packages"
+
+          "shell"
+          "terminal"
+          "terminalfont"
+
+          "de"
+          "wm"
+          "wmtheme"
+
+          "cpu"
+          "gpu"
+          "memory"
+          "swap"
+          "disk"
+
+          "battery"
+          "poweradapter"
+
+          "locale"
+          "break"
+          "colors"
+        ];
+      };
+    };
+
 }
