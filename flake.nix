@@ -9,11 +9,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    astal.url = "github:aylur/astal";
-    ags.url = "github:aylur/ags";
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-citizen.url = "github:LovingMelody/nix-citizen";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, stylix, ... }@inputs:
   let
     system = "x86_64-linux";
   in
@@ -21,7 +25,10 @@
     nixosConfigurations.vex = nixpkgs.lib.nixosSystem {
       inherit system;
 
+      specialArgs = { inherit inputs; };
+
       modules = [
+        stylix.nixosModules.stylix
         ./configuration.nix
 
         home-manager.nixosModules.home-manager

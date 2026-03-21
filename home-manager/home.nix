@@ -11,36 +11,76 @@
 
   home.stateVersion = "25.11";
 
+  programs.hyprlock.enable = true;
+
   wayland.windowManager.hyprland = {
     enable = true;
 
     settings = {
       "$mod" = "SUPER";
 
+      env = [
+        "LIBVA_DRIVER_NAME,nvidia"
+        "XDG_SESSION_TYPE,wayland"
+        "GBM_BACKEND,nvidia-drm"
+        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+        "NVD_BACKEND,direct"
+        "ELECTRON_OZONE_PLATFORM_HINT,auto"
+        "QT_QPA_PLATFORM,wayland;xcb"
+        "GDK_BACKEND,wayland,x11,*"
+      ];
+
+
+      misc = {
+        vrr = 0;
+      };
+
+      render = {
+        direct_scanout = 0;
+      };
+
+      cursor = {
+        no_hardware_cursors = false;
+      };
+
       monitor = [
-          "HDMI-A-1, 5120x1440@60.00,0x0,1"
-          "DP-4,3840x2160@60,640x-2160,1"
-          "eDP-1,1920x1080@59.988,-1920x360,1"
+          "DP-2, 5120x1440@240.00, 0x0, 1"
+          "DP-3, 3840x2160@59.99700, 640x-2160, 1"
+          "HEADLESS-2, 2800x1752@60, 2048x1440, 2"
+          #"HDMI-A-1, 5120x1440@60.00,0x0,1"
+          #"DP-4,3840x2160@60,640x-2160,1"
+          #"eDP-1,1920x1080@59.988,-1920x360,1"
           #"DP-5,5120x1440@60.00,1920x0,1"
       ];
 
       input = {
-          kb_layout = "no";
+        kb_layout = "no";
+        follow_mouse = 1;
+        accel_profile = "flat";
+        sensitivity = 0;
       };
 
       general = {
-        gaps_in = 5;
-        gaps_out = 5;
+        gaps_in = 4;
+        gaps_out = 8;
         border_size = 0;
         layout = "dwindle";
+        allow_tearing = false;
       };
 
       exec-once = [
+        "hyprctl output create headless"
         "hyprsunset"
+        "waybar"
       ];
 
       decoration = {
         rounding = 16;
+        blur = {
+          enabled = true;
+          size = 8;
+          passes = 2;
+        };
       };
 
       master = {
@@ -50,9 +90,9 @@
       };
 
       workspace = [
-          "1, monitor:HDMI-A-1, default:true, layout:master"
-          "2, monitor:DP-4, layout:dwindle"
-          "3, monitor:eDP-1, layout:dwindle"
+          "1, monitor:DP-2, default:true, layout:master"
+          "2, monitor:DP-3, layout:dwindle"
+          "3, monitor:HEADLESS-1, layout:dwindle"
       ];
 
       bind =
@@ -70,9 +110,10 @@
 
           # Focus movement (vim style)
           "$mod, H, movefocus, l"
-          "$mod, L, movefocus, r"
-          "$mod, K, movefocus, u"
           "$mod, J, movefocus, d"
+          "$mod, K, movefocus, u"
+          "$mod, L, movefocus, r"
+          "$mod, ESCAPE, exec, hyprlock"
 
           # Move windows
           "$mod SHIFT, H, movewindow, l"
@@ -101,6 +142,17 @@
           ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
         ];
 
+      device = [
+        {
+          name = "pen-passthrough";
+          output = "HEADLESS-2";
+        }
+        {
+          name = "touch-passthrough-1";
+          output = "HEADLESS-2";
+        }
+      ];
+      
       bindm = [
           "$mod, mouse:272, movewindow"
           "$mod, mouse:273, resizewindow"
@@ -118,21 +170,11 @@
     ];
   };
 
-  gtk = {
+  programs.kitty = {
     enable = true;
-    theme = {
-      package = pkgs.flat-remix-gtk;
-      name = "Flat-Remix-GTK-Grey-Darkest";
-    };
-    iconTheme = {
-      package = pkgs.adwaita-icon-theme;
-      name = "Adwaita";
-    };
-    font = {
-      name = "Sans";
-      size = 11;
-    };
   };
+
+  gtk.enable = true;
 
   xdg.configFile."hypr/hyprsunset.conf".text = ''
       max-gamma = 150
