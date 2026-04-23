@@ -14,10 +14,17 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    hyprland.url = "github:hyprwm/Hyprland";
+
     nix-citizen.url = "github:LovingMelody/nix-citizen";
+
+    hy3 = {
+      url = "github:outfoxxed/hy3";
+      inputs.hyprland.follows = "hyprland";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, stylix, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, hyprland, stylix, hy3, ... }@inputs:
   let
     system = "x86_64-linux";
   in
@@ -32,6 +39,7 @@
         ./configuration.nix
 
         home-manager.nixosModules.home-manager
+        hyprland.nixosModules.default
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;

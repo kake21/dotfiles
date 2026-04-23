@@ -1,27 +1,67 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   # Enable the X11 windowing system.
   services.xserver.enable = true;
-  
-  # Configure keymap in X11
-  services.xserver.xkb.layout = "no";
+  services.xserver.windowManager.bspwm.enable = true;
 
-  # Enable ly window manager.
-  services.displayManager.ly.enable = true;
+  # Enable greetd window manager.
+  services.greetd = {
+    enable = true;
+
+    settings = {
+      default_session = {
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --sessions ${config.services.displayManager.sessionData.desktops}/share/xsessions:${config.services.displayManager.sessionData.desktops}/share/wayland-sessions --time --remember --cmd ${config.services.displayManager.defaultSession}";
+        user = "greeter";
+      };
+      initial_session = {
+        command = "${config.services.displayManager.defaultSession}";
+        user = "vegard";
+      };
+    };
+  };
+
+  users.users.greeter = {
+    isSystemUser = true;
+    group = "greeter";
+  };
+
+  users.groups.greeter = {};
   
   # Enable power management
   services.upower.enable = true;
+  
+  # Enable gnome-keyring for secret storage (needed by spot, etc.)
+  services.gnome.gnome-keyring.enable = true;
+  services.dbus.enable = true;
+  security.polkit.enable = true;
+  security.pam.services.login.enableGnomeKeyring = true;
+  security.pam.services.ly.enableGnomeKeyring = true;
+  security.pam.services.hyprlock.enableGnomeKeyring = true;
+  security.pam.services.sxhkd.enableGnomeKeyring = true;
+
+  # Enable XDG portals for Hyprland and others
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ 
+      pkgs.xdg-desktop-portal-gtk 
+      pkgs.xdg-desktop-portal-xapp
+    ];
+    config.common.default = "*";
+  };
 
   # Enable wayland (Hyprland)
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
+    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
   };
 
   # Enable sound.
   services.pipewire = {
     enable = true;
+    alsa.enable = true;
+    jack.enable = true;
     pulse.enable = true;
   };
 
@@ -61,19 +101,39 @@
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
+
   programs.noisetorch.enable = true;
+
+  environment.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+  };
 
   # List packages installed in system profile.
   environment.systemPackages = with pkgs; [
-    lug-helper
+    # kdePackages.plasma-workspace
+    bspwm
+    sxhkd
+    rofi
+    polybar
+    # gnome-tweaks
+    #sidequest
+    alvr
+    android-tools
+    nvtopPackages.nvidia
+    #inkscape
+    prismlauncher
+    git
+    peaclock
+    hyprshot
+    slurp
+    #jdk25_headless
     hyprpicker
     obsidian
-    mission-center
+    #mission-center
     unzip
-    (blender.override {
-      cudaSupport = true;
-    })
-    blender
+    #(blender.override {
+    #  cudaSupport = true;
+    #})
     bluez
     nodejs
     btop
@@ -91,21 +151,22 @@
     nerd-fonts.jetbrains-mono
     nerd-fonts.fira-code
     wl-clipboard
-    grim
     mako
     pamixer
     noto-fonts
+    feh
+    # adwaita-icon-theme
     vim
     wget
     kitty
     jetbrains.webstorm
-    wofi
-    firefox
+    jetbrains.idea
+    #jetbrains.rider
+    #mono
     spotify
     signal-desktop
-    freecad
+    #freecad
     heroic
-    kdePackages.spectacle
-    solaar
+    #solaar
   ];
 }

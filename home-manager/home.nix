@@ -1,20 +1,26 @@
-{ inputs, pkgs, ... }:
+{ config, inputs, pkgs, ... }:
 {
-  home.username = "vegard";
-  home.homeDirectory = "/home/vegard";
+  # Home Manager Configuration
+  home = {
+    username = "vegard";
+    homeDirectory = "/home/vegard";
+    stateVersion = "25.11";
 
-  # Set Norwegian keyboard for Wayland (Hyprland)
-  home.sessionVariables = {
-    # GTK apps, general apps
-    XKB_DEFAULT_LAYOUT = "no";
+    # Session Variables
+    sessionVariables = {
+      # Set Norwegian keyboard for Wayland (Hyprland)
+      XKB_DEFAULT_LAYOUT = "no";
+    };
   };
-
-  home.stateVersion = "25.11";
 
   programs.hyprlock.enable = true;
 
   wayland.windowManager.hyprland = {
     enable = true;
+
+    plugins = [
+      inputs.hy3.packages.${pkgs.system}.hy3
+    ];
 
     settings = {
       "$mod" = "SUPER";
@@ -46,6 +52,7 @@
       monitor = [
           "DP-2, 5120x1440@240.00, 0x0, 1"
           "DP-3, 3840x2160@59.99700, 640x-2160, 1"
+          #"DP-3, 1920x1200@59.88, 640x-2160, 1"
           "HEADLESS-2, 2800x1752@60, 2048x1440, 2"
           #"HDMI-A-1, 5120x1440@60.00,0x0,1"
           #"DP-4,3840x2160@60,640x-2160,1"
@@ -61,17 +68,21 @@
       };
 
       general = {
-        gaps_in = 4;
-        gaps_out = 8;
+        layout = "hy3";
+        gaps_in = 2;
+        gaps_out = 2;
         border_size = 0;
-        layout = "dwindle";
-        allow_tearing = false;
       };
 
       exec-once = [
+        "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP DISPLAY"
+        "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP DISPLAY"
+        "gnome-keyring-daemon --start --components=secrets"
         "hyprctl output create headless"
         "hyprsunset"
         "waybar"
+        "hyprctl keyword workspace 2,layout:dwindle"
+        "noisetorch -i"
       ];
 
       decoration = {
@@ -83,30 +94,30 @@
         };
       };
 
-      master = {
-          new_status = "master";
-          mfact = 0.5;
-          orientation = "center";
-      };
 
       workspace = [
-          "1, monitor:DP-2, default:true, layout:master"
-          "2, monitor:DP-3, layout:dwindle"
-          "3, monitor:HEADLESS-1, layout:dwindle"
+          "1, monitor:DP-2"
+          "2, monitor:DP-3"
+          "3, monitor:HEADLESS-1"
       ];
 
       bind =
         [
           "$mod, F, exec, firefox"
           "$mod, Q, exec, kitty"
-          "$mod, R, exec, wofi --show drun"
-          ", Print, exec, grimblast copy area"
+          "$mod, R, exec, wofi --show drun --allow-images"
+
+          # Screenshot
+          ", Print, exec, hyprshot -m region"
+          "ALT, Print, exec, hyprshot -m window"
+          "CTRL, Print, exec, hyprshot -m output"
+
+          # Colorpicker
+          "$mod SHIFT, C, exec, hyprpicker -a"
 
           "$mod, C, killactive"
           "$mod, M, exit"
-          "$mod, V, togglefloating"
-          "$mod, P, pseudo" # dwindle
-          "$mod, J, togglesplit"
+          "$mod, SPACE, togglefloating"
 
           # Focus movement (vim style)
           "$mod, H, movefocus, l"
@@ -160,21 +171,86 @@
     };
   };
 
-  programs.firefox.profiles.vegard = {
-    search = {
-      default = "DuckDuckGo";
+  programs.firefox = {
+    enable = true;
+
+    profiles = {
+      vegard = {
+        extensions.force = true;
+        search = {
+          default = "ddg";
+          force = true;
+        };
+      };
     };
-    extensions.packages = with pkgs.firefoxExtensions; [
-      ublock-origin
-      darkreader
-    ];
+  };
+
+  stylix = {
+    enable = true;
+    targets = {
+      firefox = {
+        enable = true;
+        profileNames = [ "vegard" ];
+        colorTheme.enable = true;
+      };
+    };
   };
 
   programs.kitty = {
     enable = true;
   };
 
-  gtk.enable = true;
+  programs.wofi = {
+    enable = true;
+
+    settings = {
+      show = "drun";
+      width = 600;
+      height = 400;
+      always_parse_args = true;
+      show_all = false;
+      print_command = true;
+      insensitive = true;
+      prompt = "Search...";
+    };
+
+    style = with config.lib.stylix.colors; ''
+      * {
+        font-family: JetBrainsMono Nerd Font;
+        font-size: 14px;
+      }
+
+      window {
+        background-color: #${base00};
+        padding: 4px;
+      }
+
+      #input {
+        margin: 10px;
+        padding: 8px;
+        border-radius: 8px;
+        border: none;
+        background-color: #${base02};
+        color: #cdd6f4;
+      }
+
+      #entry:selected {
+        background-color: #${base02};
+        color: #${base0A};
+        padding: 4px;
+        border-radius: 8px;
+      }
+    '';
+  };
+
+  gtk = {
+    enable = true;
+    gtk4.theme = config.gtk.theme;
+    iconTheme = {
+      package = pkgs.adwaita-icon-theme;
+      name = "Adwaita";
+    };
+  };
 
   xdg.configFile."hypr/hyprsunset.conf".text = ''
       max-gamma = 150
@@ -196,22 +272,6 @@
       enable = true;
 
       settings = {
-        logo = {
-          type = "builtin";
-          source = [
-            "::::.    ':::::      ::::"
-            "::::'      :::::     ::::"
-            "::::.        :::::   ::::"
-            "::::'          ::::: ::::"
-            "::::.            ::::::::"
-            "::::'          ::::: ::::"
-            "::::.        :::::   ::::"
-            "::::'      :::::     ::::"
-            "::::.    :::::       ::::"
-          ];
-          padding.right = 2;
-        };
-
         display = {
           separator = "  ";
           color = "blue";
