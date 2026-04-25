@@ -9,6 +9,8 @@
     ./modules/networking.nix
     ./modules/users.nix
     ./modules/desktop.nix
+    ./modules/nvidia.nix
+    ./modules/wivrn.nix
     ./modules/steam.nix
     ./modules/stylix.nix
     ./modules/docker.nix

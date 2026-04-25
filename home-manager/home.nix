@@ -1,4 +1,4 @@
-{ config, inputs, pkgs, ... }:
+{ config, inputs, lib, pkgs, ... }:
 {
   # Home Manager Configuration
   home = {
@@ -19,7 +19,7 @@
     enable = true;
 
     plugins = [
-      inputs.hy3.packages.${pkgs.system}.hy3
+      inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
     ];
 
     settings = {
@@ -50,7 +50,7 @@
       };
 
       monitor = [
-          "DP-2, 5120x1440@240.00, 0x0, 1"
+          "DP-2, 5120x1440@240, 0x0, 1"
           "DP-3, 3840x2160@59.99700, 640x-2160, 1"
           #"DP-3, 1920x1200@59.88, 640x-2160, 1"
           "HEADLESS-2, 2800x1752@60, 2048x1440, 2"
@@ -193,52 +193,145 @@
         profileNames = [ "vegard" ];
         colorTheme.enable = true;
       };
+      rofi.enable = false;
     };
   };
 
-  programs.kitty = {
+  # BPSWM
+  xsession.windowManager.bspwm = {
     enable = true;
-  };
-
-  programs.wofi = {
-    enable = true;
-
+    monitors = {
+      DP-2 = [ "1" "2" "3" "4" "5" ];
+      DP-3 = [ "6" "7" "8" "9" "0" ];
+    };
     settings = {
-      show = "drun";
+      border_width = 2;
+      window_gap = 4;
+      split_ratio = 0.52;
+    };
+    startupPrograms = [
+      #"xrandr --output DP-2 --mode 5120x1440 --rate 240 --pos 0x0 --rotate normal --output DP-4 --mode 3840x2160 --pos 640x-2160 --rotate normal"
+      "feh --bg-fill /home/vegard/dotfiles/modules/wallpapers/Hawk_PirateView_Concept.jpg"
+    ];
+  };
+
+  services.sxhkd = {
+    enable = true;
+    keybindings = {
+      "super + q" = "kitty";
+      "super + r" = "rofi -show drun";
+      "super + c" = "bspc node -c";
+      "super + m" = "bspc quit";
+      "super + alt + {q,r}" = "bspc {quit,wm -r}";
+
+      # pocus/swap
+      "super + {_,shift + }{h,j,k,l}" = "bspc node -{f,s} {west,south,north,east}";
+
+      # Focus the next/previous window in the current desktop
+      "super + {_,shift + }c" = "bspc node -f {next,prev}.local.!hidden.window";
+
+      # Focus the next/previous desktop in the current monitor
+      "super + {bracketleft,bracketright}" = "bspc desktop -f {prev,next}.local";
+
+      # Focus the last node/desktop
+      "super + {Tab,grave}" = "bspc {node,desktop} -f last";
+
+      # Move to workspace
+      "super + {1-9,0}" = "bspc desktop -f '^{1-9,10}'";
+      "super + shift + {1-9,0}" = "bspc node -d '^{1-9,10}'";
+
+      # Media keys
+      "XF86AudioRaiseVolume" = "pamixer -i 1";
+      "XF86AudioLowerVolume" = "pamixer -d 1";
+      "XF86AudioMute" = "pamixer -t";
+      "XF86AudioPlay" = "playerctl play-pause";
+      "XF86AudioNext" = "playerctl next";
+      "XF86AudioPrev" = "playerctl previous";
+      "XF86MonBrightnessUp" = "brightnessctl set +5%";
+      "XF86MonBrightnessDown" = "brightnessctl set 5%-";
+
+      # Preselect
+      "super + ctrl + {h,j,k,l}" = "bspc node -p {west,south,north,east}";
+      "super + ctrl + {1-9}" = "bspc node -o 0.{1-9}";
+      "super + ctrl + space" = "bspc node -p cancel";
+
+      # Toggle states
+      "super + {t,shift + t,s,f}" = "bspc node -t {tiled,pseudo_tiled,floating,fullscreen}";
+    };
+  };
+
+  programs.rofi = {
+    enable = true;
+
+    extraConfig = {
+      modi = "drun";
       width = 600;
-      height = 400;
-      always_parse_args = true;
-      show_all = false;
-      print_command = true;
-      insensitive = true;
-      prompt = "Search...";
+      lines = 10;
+      show-icons = true;
+      terminal = "kitty";
+      drun-display-format = "{name}";
+      disable-history = false;
+      sidebar-mode = false;
+      case-sensitive = false;
+      display-drun = "";
     };
 
-    style = with config.lib.stylix.colors; ''
+    theme = with config.lib.stylix.colors; builtins.toFile "rofi-theme.rasi" ''
       * {
-        font-family: JetBrainsMono Nerd Font;
-        font-size: 14px;
+        font: "JetBrainsMono Nerd Font 14";
+        background-color: transparent;
       }
 
       window {
         background-color: #${base00};
         padding: 4px;
+        border-radius: 16px;
+        width: 800px;
       }
 
-      #input {
+      mainbox {
+        background-color: transparent;
+      }
+
+      inputbar {
+        children: [prompt, entry];
         margin: 10px;
         padding: 8px;
         border-radius: 8px;
-        border: none;
         background-color: #${base02};
-        color: #cdd6f4;
       }
 
-      #entry:selected {
-        background-color: #${base02};
-        color: #${base0A};
+      prompt {
+        enabled: true;
+        text-color: #${base0A};
+      }
+
+      entry {
+        placeholder: "Search...";
+        text-color: #cdd6f4;
+        background-color: transparent;
+      }
+
+      listview {
+        background-color: transparent;
+        margin: 0px 10px;
+        spacing: 4px;
+      }
+
+      element {
         padding: 4px;
         border-radius: 8px;
+        background-color: transparent;
+        text-color: #${base0A};
+      }
+
+      element selected {
+        background-color: #${base02};
+      }
+
+      element-text {
+        background-color: transparent;
+        text-color: inherit;
       }
     '';
   };
@@ -249,6 +342,13 @@
     iconTheme = {
       package = pkgs.adwaita-icon-theme;
       name = "Adwaita";
+    };
+  };
+
+  programs.kitty = {
+    enable = true;
+    settings = {
+      background_opacity = lib.mkForce "0.7"; # adjust (0.0–1.0)
     };
   };
 
