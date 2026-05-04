@@ -52,12 +52,6 @@
       monitor = [
           "DP-2, 5120x1440@240, 0x0, 1"
           "DP-3, 3840x2160@59.99700, 640x-2160, 1"
-          #"DP-3, 1920x1200@59.88, 640x-2160, 1"
-          "HEADLESS-2, 2800x1752@60, 2048x1440, 2"
-          #"HDMI-A-1, 5120x1440@60.00,0x0,1"
-          #"DP-4,3840x2160@60,640x-2160,1"
-          #"eDP-1,1920x1080@59.988,-1920x360,1"
-          #"DP-5,5120x1440@60.00,1920x0,1"
       ];
 
       input = {
@@ -68,7 +62,6 @@
       };
 
       general = {
-        layout = "hy3";
         gaps_in = 2;
         gaps_out = 2;
         border_size = 0;
@@ -80,13 +73,10 @@
         "gnome-keyring-daemon --start --components=secrets"
         "hyprctl output create headless"
         "hyprsunset"
-        "waybar"
-        "hyprctl keyword workspace 2,layout:dwindle"
-        "noisetorch -i"
       ];
 
       decoration = {
-        rounding = 16;
+        rounding = 8;
         blur = {
           enabled = true;
           size = 8;
@@ -98,14 +88,13 @@
       workspace = [
           "1, monitor:DP-2"
           "2, monitor:DP-3"
-          "3, monitor:HEADLESS-1"
       ];
 
       bind =
         [
           "$mod, F, exec, firefox"
           "$mod, Q, exec, kitty"
-          "$mod, R, exec, wofi --show drun --allow-images"
+          "$mod, R, exec, wofi --show drun"
 
           # Screenshot
           ", Print, exec, hyprshot -m region"
@@ -193,145 +182,124 @@
         profileNames = [ "vegard" ];
         colorTheme.enable = true;
       };
-      rofi.enable = false;
+      wofi.enable = false;
     };
   };
 
   # BPSWM
-  xsession.windowManager.bspwm = {
+  #xsession.windowManager.bspwm = {
+  #  enable = true;
+  #  monitors = {
+  #    DP-2 = [ "1" "2" "3" "4" "5" ];
+  #    DP-3 = [ "6" "7" "8" "9" "0" ];
+  #  };
+  #  settings = {
+  #    border_width = 2;
+  #    window_gap = 4;
+  #    split_ratio = 0.52;
+  #  };
+  #  startupPrograms = [
+  #    #"xrandr --output DP-2 --mode 5120x1440 --rate 240 --pos 0x0 --rotate normal --output DP-4 --mode 3840x2160 --pos 640x-2160 --rotate normal"
+  #    "feh --bg-fill /home/vegard/dotfiles/modules/wallpapers/Hawk_PirateView_Concept.jpg"
+  #  ];
+  #};
+
+  #services.sxhkd = {
+  #  enable = true;
+  #  keybindings = {
+  #    "super + q" = "kitty";
+  #    "super + r" = "wofi --show drun";
+  #    "super + c" = "bspc node -c";
+  #    "super + m" = "bspc quit";
+  #    "super + alt + {q,r}" = "bspc {quit,wm -r}";
+  #
+  #    # pocus/swap
+  #    "super + {_,shift + }{h,j,k,l}" = "bspc node -{f,s} {west,south,north,east}";
+  #
+  #    # Focus the next/previous window in the current desktop
+  #    "super + {_,shift + }c" = "bspc node -f {next,prev}.local.!hidden.window";
+  #
+  #    # Focus the next/previous desktop in the current monitor
+  #    "super + {bracketleft,bracketright}" = "bspc desktop -f {prev,next}.local";
+  #
+  #    # Focus the last node/desktop
+  #    "super + {Tab,grave}" = "bspc {node,desktop} -f last";
+  #
+  #    # Move to workspace
+  #    "super + {1-9,0}" = "bspc desktop -f '^{1-9,10}'";
+  #    "super + shift + {1-9,0}" = "bspc node -d '^{1-9,10}'";
+  #
+  #    # Media keys
+  #    "XF86AudioRaiseVolume" = "pamixer -i 1";
+  #    "XF86AudioLowerVolume" = "pamixer -d 1";
+  #    "XF86AudioMute" = "pamixer -t";
+  #    "XF86AudioPlay" = "playerctl play-pause";
+  #    "XF86AudioNext" = "playerctl next";
+  #    "XF86AudioPrev" = "playerctl previous";
+  #    "XF86MonBrightnessUp" = "brightnessctl set +5%";
+  #    "XF86MonBrightnessDown" = "brightnessctl set 5%-";
+
+  #    # Preselect
+  #    "super + ctrl + {h,j,k,l}" = "bspc node -p {west,south,north,east}";
+  #    "super + ctrl + {1-9}" = "bspc node -o 0.{1-9}";
+  #    "super + ctrl + space" = "bspc node -p cancel";
+
+  #    # Toggle states
+  #    "super + {t,shift + t,s,f}" = "bspc node -t {tiled,pseudo_tiled,floating,fullscreen}";
+  #  };
+  #};
+
+  programs.wofi = {
     enable = true;
-    monitors = {
-      DP-2 = [ "1" "2" "3" "4" "5" ];
-      DP-3 = [ "6" "7" "8" "9" "0" ];
-    };
     settings = {
-      border_width = 2;
-      window_gap = 4;
-      split_ratio = 0.52;
+      allow_images = true;
+      width = 800;
     };
-    startupPrograms = [
-      #"xrandr --output DP-2 --mode 5120x1440 --rate 240 --pos 0x0 --rotate normal --output DP-4 --mode 3840x2160 --pos 640x-2160 --rotate normal"
-      "feh --bg-fill /home/vegard/dotfiles/modules/wallpapers/Hawk_PirateView_Concept.jpg"
-    ];
-  };
-
-  services.sxhkd = {
-    enable = true;
-    keybindings = {
-      "super + q" = "kitty";
-      "super + r" = "rofi -show drun";
-      "super + c" = "bspc node -c";
-      "super + m" = "bspc quit";
-      "super + alt + {q,r}" = "bspc {quit,wm -r}";
-
-      # pocus/swap
-      "super + {_,shift + }{h,j,k,l}" = "bspc node -{f,s} {west,south,north,east}";
-
-      # Focus the next/previous window in the current desktop
-      "super + {_,shift + }c" = "bspc node -f {next,prev}.local.!hidden.window";
-
-      # Focus the next/previous desktop in the current monitor
-      "super + {bracketleft,bracketright}" = "bspc desktop -f {prev,next}.local";
-
-      # Focus the last node/desktop
-      "super + {Tab,grave}" = "bspc {node,desktop} -f last";
-
-      # Move to workspace
-      "super + {1-9,0}" = "bspc desktop -f '^{1-9,10}'";
-      "super + shift + {1-9,0}" = "bspc node -d '^{1-9,10}'";
-
-      # Media keys
-      "XF86AudioRaiseVolume" = "pamixer -i 1";
-      "XF86AudioLowerVolume" = "pamixer -d 1";
-      "XF86AudioMute" = "pamixer -t";
-      "XF86AudioPlay" = "playerctl play-pause";
-      "XF86AudioNext" = "playerctl next";
-      "XF86AudioPrev" = "playerctl previous";
-      "XF86MonBrightnessUp" = "brightnessctl set +5%";
-      "XF86MonBrightnessDown" = "brightnessctl set 5%-";
-
-      # Preselect
-      "super + ctrl + {h,j,k,l}" = "bspc node -p {west,south,north,east}";
-      "super + ctrl + {1-9}" = "bspc node -o 0.{1-9}";
-      "super + ctrl + space" = "bspc node -p cancel";
-
-      # Toggle states
-      "super + {t,shift + t,s,f}" = "bspc node -t {tiled,pseudo_tiled,floating,fullscreen}";
-    };
-  };
-
-  programs.rofi = {
-    enable = true;
-
-    extraConfig = {
-      modi = "drun";
-      width = 600;
-      lines = 10;
-      show-icons = true;
-      terminal = "kitty";
-      drun-display-format = "{name}";
-      disable-history = false;
-      sidebar-mode = false;
-      case-sensitive = false;
-      display-drun = "";
-    };
-
-    theme = with config.lib.stylix.colors; builtins.toFile "rofi-theme.rasi" ''
+    style = with config.lib.stylix.colors; ''
       * {
-        font: "JetBrainsMono Nerd Font 14";
-        background-color: transparent;
+        font-family: "JetBrainsMono Nerd Font";
+        font-size: 14pt;
       }
 
       window {
         background-color: #${base00};
         padding: 4px;
         border-radius: 16px;
-        width: 800px;
       }
 
-      mainbox {
-        background-color: transparent;
-      }
-
-      inputbar {
-        children: [prompt, entry];
+      #input {
         margin: 10px;
         padding: 8px;
         border-radius: 8px;
         background-color: #${base02};
+        color: #cdd6f4;
+        border: none;
       }
 
-      prompt {
-        enabled: true;
-        text-color: #${base0A};
-      }
-
-      entry {
-        placeholder: "Search...";
-        text-color: #cdd6f4;
+      #inner-box {
         background-color: transparent;
       }
 
-      listview {
+      #outer-box {
         background-color: transparent;
-        margin: 0px 10px;
-        spacing: 4px;
       }
 
-      element {
-        padding: 4px;
-        border-radius: 8px;
+      #scroll {
         background-color: transparent;
-        text-color: #${base0A};
       }
 
-      element selected {
+      #text {
+        margin: 4px;
+        color: #${base0A};
+      }
+
+      #entry:selected {
         background-color: #${base02};
+        border-radius: 8px;
       }
 
-      element-text {
-        background-color: transparent;
-        text-color: inherit;
+      #text:selected {
+        color: #${base0A};
       }
     '';
   };

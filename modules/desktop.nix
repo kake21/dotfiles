@@ -1,22 +1,45 @@
 { config, pkgs, inputs, ... }:
 
 {
-  services.displayManager.defaultSession = "none+bspwm";
+  # services.displayManager.defaultSession = "none+bspwm";
+  services.displayManager.defaultSession = "hyprland";
   services.xserver = {
     enable = true;
     xkb.layout = "no";
 
-    displayManager.lightdm = {
-      enable = true;
-      greeters.slick.enable = true;
-    };
+    # displayManager.lightdm = {
+    #   enable = true;
+    #   greeters.slick.enable = true;
+    # };
 
     # Tiling window manager
-    windowManager.bspwm = {
-      enable = true;
-      # Configuration handled by home-manager
+    # windowManager.bspwm = {
+    #   enable = true;
+    #   # Configuration handled by home-manager
+    # };s
+  };
+
+  # Enable greetd window manager.
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.tuigreet}/bin/tuigreet --sessions ${config.services.displayManager.sessionData.desktops}/share/xsessions:${config.services.displayManager.sessionData.desktops}/share/wayland-sessions --time --remember --cmd start-hyprland";
+        user = "greeter";
+      };
+      initial_session = {
+        command = "start-hyprland";
+        user = "vegard";
+      };
     };
   };
+
+  users.users.greeter = {
+    isSystemUser = true;
+    group = "greeter";
+  };
+
+  users.groups.greeter = {};
 
   services.xserver.displayManager.setupCommands = ''
     ${pkgs.xrandr}/bin/xrandr --output DP-2 --mode 5120x1440 --rate 240 --primary
@@ -43,7 +66,7 @@
   services.dbus.enable = true;
   security.polkit.enable = true;
   security.pam.services.login.enableGnomeKeyring = true;
-  security.pam.services.lightdm.enableGnomeKeyring = true;
+  security.pam.services.greetd.enableGnomeKeyring = true;
   security.pam.services.hyprlock.enableGnomeKeyring = true;
 
   # Enable XDG portals for Hyprland and others
@@ -63,11 +86,22 @@
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
   };
 
-  # List packages installed in system profile.
   environment.systemPackages = with pkgs; [
+    (writeShellScriptBin "start-hyprland" ''
+      export LIBVA_DRIVER_NAME=nvidia
+      export XDG_SESSION_TYPE=wayland
+      export GBM_BACKEND=nvidia-drm
+      export __GLX_VENDOR_LIBRARY_NAME=nvidia
+      export WLR_NO_HARDWARE_CURSORS=1
+      exec Hyprland
+    '')
+    (pkgs.ollama.override {
+      acceleration = "cuda";
+    })
+    bitwarden-desktop
     discordo
     spotify-player
-    rofi
+    wofi
     inkscape
     prismlauncher
     git

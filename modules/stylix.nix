@@ -3,7 +3,10 @@
 {
   stylix = {
     enable = true;
-    image = ./wallpapers/wall2.png;
+    image = pkgs.fetchurl {
+      url = "https://media.starcitizen.tools/8/84/Hawk_SpaceFlight_Concept.jpg?download";
+      hash = "sha256-fMZ53Mr8z7M+9FV9OXCaTFsNNb8fxyUoxPM/deYa69k=";
+    };
     base16Scheme = {
       base00 = "0A1D29"; # Background
       base01 = "0F2C3E"; # Lighter background
