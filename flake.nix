@@ -18,6 +18,8 @@
 
     nix-citizen.url = "github:LovingMelody/nix-citizen";
 
+    nixcord.url = "github:FlameFlag/nixcord";
+
     hy3 = {
       url = "github:outfoxxed/hy3";
       inputs.hyprland.follows = "hyprland";

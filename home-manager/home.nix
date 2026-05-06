@@ -317,6 +317,7 @@
     enable = true;
     settings = {
       background_opacity = lib.mkForce "0.7"; # adjust (0.0–1.0)
+      confirm_os_window_close = 0;
     };
   };
 
@@ -336,48 +337,111 @@
   '';
 
 
-    programs.fastfetch = {
-      enable = true;
+  programs.fastfetch = {
+    enable = true;
 
-      settings = {
-        display = {
-          separator = "  ";
-          color = "blue";
-          size.maxPrefix = "GB";
+    settings = {
+      logo = {
+        source = "${pkgs.writeText "fastfetch-logo.txt" ''
+                                        🭈🬭🭆🬹🭂
+                                  🭈🬭🭆🬹🭂██████
+                            🭈🬭🭆🬹🭂████████████
+                      🭈🬭🭆🬹🭂██████████████████
+                🭈🬽  🭧🬎🭓██████████████████████
+          🭈🬭🭆🬹🭂████🭍🬹🭑🬭🬽🭣🬂🭧🬎🭓████████████████
+          ███████████████🭍🬹🭑🬭🬽🭣🬂🭧🬎🭓█████🭞🬎🭜🬂🭘
+          █████████████████████🭍🬹🭑🬭 🭣🬂🭘
+          ██████████████████🭞🬎🭜🬂🭘$2🭈🬭🭆🬹🬹🭑🬭🬽$1
+          ████████████🭞🬎🭜🬂🭘$2🭈🬭🭆🬹🭂████████🭞$1
+          ██████🭞🬎🭜🬂🭘$2🭈🬭🭆🬹🭂█████████🭞🬎🭜🬂🭘$1🭈🬭🭆🬹🭂
+          🭞🬎🭜🬂🭘$2🭈🬭🭆🬹🭂█████████🭞🬎🭜🬂🭘$1🭈🬭🭆🬹🭂██████
+              $2🭂████████🭞🬎🭜🬂🭘$1🭈🬭🭆🬹🭂████████████
+              $2🭣🬂🭧🬎🬎🭜🬂🭘$1🭈🬭🭆🬹🭂██████████████████
+                🭈🬭🬽 🬂🭧🬎🭓█████████████████████
+          🭈🬭🭆🬹🭂█████🭍🬹🭑🬭🬽🭣🬂🭧🬎🭓███████████████
+          ████████████████🭍🬹🭑🬭🬽🭣🬂🭧🬎🭓████🭞🬎🭜🬂🭘
+          ██🭜🭘vex  🭣🭧███████████🭍🬹🭑  🭣🭘
+          ██🭑🬽NixOS🭈🭆███████🭞🬎🭜🬂🭘
+          ████████████🭞🬎🭜🬂🭘
+          ██████🭞🬎🭜🬂🭘
+          🭞🬎🭜🬂🭘
+
+        ''}";
+        type = "file";
+
+        color = {
+          "1" = "blue";
+          "2" = "magenta";
         };
 
-        modules = [
-          "title"
-          "separator"
+        padding = {
+          top = 1;
+          left = 2;
+          right = 3;
+        };
+      };
 
-          "os"
-          "host"
-          "kernel"
-          "uptime"
-          "packages"
+      display = {
+        separator = "  ";
+        color = "blue";
+        size.maxPrefix = "GB";
+      };
 
-          "shell"
-          "terminal"
-          "terminalfont"
+      modules = [
+        "title"
+        "separator"
 
-          "de"
-          "wm"
-          "wmtheme"
+        "os"
+        "host"
+        "kernel"
+        "uptime"
+        "packages"
 
-          "cpu"
-          "gpu"
-          "memory"
-          "swap"
-          "disk"
+        "shell"
+        "terminal"
+        "terminalfont"
 
-          "battery"
-          "poweradapter"
+        "de"
+        "wm"
+        "wmtheme"
 
-          "locale"
-          "break"
-          "colors"
+        "cpu"
+        "gpu"
+        "memory"
+        "swap"
+        "disk"
+
+        "battery"
+        "poweradapter"
+
+        "locale"
+        "break"
+        "colors"
+      ];
+    };
+  };
+
+  imports = [ inputs.nixcord.homeModules.nixcord ];
+    programs.nixcord = {
+      enable = true;
+
+      # Choose your client (enable only one of these two)
+      discord.vencord.enable = true;      # Standard Vencord
+      # discord.equicord.enable = true;   # Equicord (has more plugins)
+
+      # Or these
+      vesktop.enable = true;
+      # dorion.enable = true;
+      # legcord.enable = true;
+
+      # Theming
+      quickCss = "/* css goes here */";
+      config = {
+        useQuickCss = true;
+        themeLinks = [
+          "https://raw.githubusercontent.com/link/to/some/theme.css"
         ];
+        frameless = true;
       };
     };
-
 }

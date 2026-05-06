@@ -8,27 +8,35 @@
       hash = "sha256-fMZ53Mr8z7M+9FV9OXCaTFsNNb8fxyUoxPM/deYa69k=";
     };
     base16Scheme = {
-      base00 = "0A1D29"; # Background
-      base01 = "0F2C3E"; # Lighter background
-      base02 = "143A52"; # Selection background
+      # --- BACKGROUNDS & UI ---
+      base00 = "0A1D29"; # Default Background (Deep Blue)
+      base01 = "0F2C3E"; # Lighter Background (Status bars, panels)
+      base02 = "143A52"; # Selection Background
       base03 = "516673"; # Comments, Invisibles, Line Highlighting
-      base04 = "06151F"; # Dark Foreground (Used for status bars)
-      base05 = "54adf7"; # Default Foreground, Caret, Delimiters, Operators
-      base06 = "ebdbb2"; # Light Foreground (Not often used)
-      base07 = "fbf1c7"; # Light Background (Not often used)
-      base08 = "fb4934"; # Variables, XML Tags, Markup Link Text, Markup Lists, Diff Deleted
-      base09 = "fe8019"; # Integers, Boolean, Constants, XML Attributes, Markup Link Reference
-      base0A = "54adf7"; # Classes, Markup Bold, Search Text Background
-      base0B = "e9c600"; # Strings, Inherited Class, Markup Code, Diff Inserted
-      base0C = "8ec07c"; # Support, Regular Expressions, Escape Characters, Markup Quotes
-      base0D = "b1b1b3"; # Functions, Methods, Attribute IDs, Headings
-      base0E = "fd7de7"; # Keywords, Storage, Selector, Markup Italic, Diff Changed
-      base0F = "b98eff"; # Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
+
+      # --- FOREGROUNDS (TEXT) ---
+      base04 = "86A5B8"; # Dark Foreground (Inactive text, muted grey-blue)
+      base05 = "C0D5E2"; # Default Foreground (Readable off-white with blue tint)
+      base06 = "E1EEF5"; # Light Foreground (Hover states)
+      base07 = "F4F8FA"; # Brightest text (Rarely used)
+
+      # --- COLORS / SYNTAX HIGHLIGHTING ---
+      base08 = "FF6B8B"; # Red: Variables, XML Tags, Markup Link Text, Diff Deleted
+      base09 = "FE9B54"; # Orange: Integers, Boolean, Constants
+      base0A = "F3E47C"; # Yellow: Classes, Markup Bold, Search Text Background
+      base0B = "A2E57B"; # Green: Strings, Inherited Class, Diff Inserted
+      base0C = "73DACA"; # Cyan: Regular Expressions, Escape Characters
+
+      # THE MAIN ACCENT:
+      base0D = "54ADF7"; # Blue: Headings, Primary Accent, Functions, Methods
+
+      base0E = "E962E0"; # Magenta/Pink: Keywords, Storage, Selector, Diff Changed
+      base0F = "B98EFF"; # Purple: Deprecated, Opening/Closing Tags
     };
 
     cursor = {
-      package = pkgs.bibata-cursors;
-      name = "Bibata-Modern-Ice";
+      package = pkgs.apple-cursor;
+      name = "Apple Cursor";
       size = 24;
     };
     fonts = {

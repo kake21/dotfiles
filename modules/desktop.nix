@@ -87,6 +87,7 @@
   };
 
   environment.systemPackages = with pkgs; [
+    hyprlauncher
     (writeShellScriptBin "start-hyprland" ''
       export LIBVA_DRIVER_NAME=nvidia
       export XDG_SESSION_TYPE=wayland
