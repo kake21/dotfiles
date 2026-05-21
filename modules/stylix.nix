@@ -36,9 +36,10 @@
 
     cursor = {
       package = pkgs.apple-cursor;
-      name = "Apple Cursor";
+      name = "macOS";
       size = 24;
     };
+
     fonts = {
       monospace = {
         package = pkgs.nerd-fonts.jetbrains-mono;

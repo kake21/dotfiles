@@ -71,8 +71,9 @@
         "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP DISPLAY"
         "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP DISPLAY"
         "gnome-keyring-daemon --start --components=secrets"
-        "hyprctl output create headless"
+        #"hyprctl output create headless"
         "hyprsunset"
+        "nm-applet --indicator"
       ];
 
       decoration = {
@@ -97,6 +98,7 @@
           "$mod, R, exec, wofi --show drun"
 
           # Screenshot
+          "$mod SHIFT, S, exec, hyprshot -m region"
           ", Print, exec, hyprshot -m region"
           "ALT, Print, exec, hyprshot -m window"
           "CTRL, Print, exec, hyprshot -m output"
@@ -330,9 +332,9 @@
       }
 
       profile {
-          time = 19:00
+          time = 22:00
           temperature = 3700
-          gamma = 0.8
+          gamma = 1
       }
   '';
 

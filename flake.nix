@@ -29,16 +29,12 @@
   outputs = { self, nixpkgs, home-manager, hyprland, stylix, hy3, ... }@inputs:
   let
     system = "x86_64-linux";
-  in
-  {
-    nixosConfigurations.vex = nixpkgs.lib.nixosSystem {
+    mkHost = hostName: nixpkgs.lib.nixosSystem {
       inherit system;
-
       specialArgs = { inherit inputs; };
-
       modules = [
         stylix.nixosModules.stylix
-        ./configuration.nix
+        ./hosts/${hostName}/configuration.nix
 
         home-manager.nixosModules.home-manager
         hyprland.nixosModules.default
@@ -52,6 +48,12 @@
           home-manager.extraSpecialArgs = { inherit inputs; };
         }
       ];
+    };
+  in
+  {
+    nixosConfigurations = {
+      vex = mkHost "vex";
+      laptop = mkHost "laptop";
     };
   };
 }

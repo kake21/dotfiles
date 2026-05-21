@@ -1,0 +1,32 @@
+{ config, pkgs, ... }:
+
+{
+  environment.systemPackages = with pkgs; [
+    chromium
+    bitwarden-desktop
+    spotify
+    spotify-player
+    discord
+    signal-desktop
+    inkscape
+    prismlauncher
+    mission-center
+    pavucontrol
+    playerctl
+    brightnessctl
+    kitty
+    jetbrains.webstorm
+    jetbrains.idea
+    jetbrains.dataspell
+    jetbrains.clion
+    freecad
+    heroic
+    ollama
+  ];
+
+  # Enable gnome-keyring for secret storage (needed by spot, etc.)
+  services.gnome.gnome-keyring.enable = true;
+  security.pam.services.login.enableGnomeKeyring = true;
+  security.pam.services.greetd.enableGnomeKeyring = true;
+  security.pam.services.hyprlock.enableGnomeKeyring = true;
+}

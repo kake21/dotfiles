@@ -86,6 +86,9 @@
   # Sunshine needs uinput for virtual input devices
   services.udev.extraRules = ''
     KERNEL=="uinput", SUBSYSTEM=="misc", OPTIONS+="static_node=uinput", TAG+="uaccess"
+
+    # Madlions MAD60HE WebHID/Configurator rule
+    KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="373b", ATTRS{idProduct}=="1202", MODE="0660", GROUP="input", TAG+="uaccess"
   '';
 
   # Add Sunshine to systemPackages for CLI access/management if needed
