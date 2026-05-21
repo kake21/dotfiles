@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ../../hardware-configuration.nix # Specific to vex
+    ./hardware-configuration.nix # Specific to vex
     ../../modules/system.nix
     ../../modules/networking.nix
     ../../modules/users.nix
