@@ -2,7 +2,7 @@
 
 {
   imports = [
-    # ./hardware-configuration.nix # You'll need to generate this on the laptop
+    ./hardware-configuration.nix # You'll need to generate this on the laptop
     ../../modules/system.nix
     ../../modules/networking.nix
     ../../modules/users.nix
