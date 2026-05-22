@@ -1,4 +1,4 @@
-{ config, inputs, lib, pkgs, ... }:
+{ config, inputs, lib, pkgs, osConfig, ... }:
 {
   # Home Manager Configuration
   home = {
@@ -14,6 +14,26 @@
   };
 
   programs.hyprlock.enable = true;
+
+  programs.waybar = {
+    enable = osConfig.networking.hostName == "laptop";
+
+    settings = {
+      mainBar = {
+        layer = "bottom";
+        position = "bottom";
+
+        modules-left = [ "hyprland/workspaces" ];
+        modules-center = [ "clock" ];
+        modules-right = [ "pulseaudio" "network" "battery" ];
+
+        clock = {
+          format = "{:%H:%M}";
+        };
+      };
+    };
+  };
+
 
   wayland.windowManager.hyprland = {
     enable = true;
@@ -59,6 +79,20 @@
         follow_mouse = 1;
         accel_profile = "flat";
         sensitivity = 0;
+
+        touchpad = {
+          natural_scroll = true;
+          scroll_factor = 0.2;
+        };
+      };
+
+      gesture = [
+        "3, horizontal, workspace"
+      ];
+
+      gestures = {
+        workspace_swipe_invert = true;
+        workspace_swipe_distance = 500;
       };
 
       general = {
@@ -74,6 +108,7 @@
         #"hyprctl output create headless"
         "hyprsunset"
         "nm-applet --indicator"
+        "waybar"
       ];
 
       decoration = {
