@@ -7,6 +7,7 @@
     ./audio.nix
     ./fonts.nix
     ./gui-apps.nix
+    ./jetbrains.nix
     ./cli-apps.nix
   ];
 

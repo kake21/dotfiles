@@ -15,10 +15,6 @@
     playerctl
     brightnessctl
     kitty
-    jetbrains.webstorm
-    jetbrains.idea
-    jetbrains.dataspell
-    jetbrains.clion
     freecad
     heroic
     ollama

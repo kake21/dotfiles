@@ -52,8 +52,7 @@
         "__GLX_VENDOR_LIBRARY_NAME,nvidia"
         "NVD_BACKEND,direct"
         "ELECTRON_OZONE_PLATFORM_HINT,auto"
-        "QT_QPA_PLATFORM,wayland;xcb"
-        "GDK_BACKEND,wayland,x11,*"
+        "QT_QPA_PLATFORM,wayland;xcb"        "GDK_BACKEND,wayland,x11,*"
       ];
 
 
@@ -92,7 +91,7 @@
 
       gestures = {
         workspace_swipe_invert = true;
-        workspace_swipe_distance = 500;
+        workspace_swipe_distance = 300;
       };
 
       general = {
@@ -458,7 +457,10 @@
     };
   };
 
-  imports = [ inputs.nixcord.homeModules.nixcord ];
+  imports = [ 
+    inputs.nixcord.homeModules.nixcord
+    ../modules/nixvim.nix
+  ];
     programs.nixcord = {
       enable = true;
 

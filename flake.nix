@@ -24,9 +24,14 @@
       url = "github:outfoxxed/hy3";
       inputs.hyprland.follows = "hyprland";
     };
+
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, hyprland, stylix, hy3, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, hyprland, stylix, hy3, nixvim, ... }@inputs:
   let
     system = "x86_64-linux";
     mkHost = hostName: nixpkgs.lib.nixosSystem {
