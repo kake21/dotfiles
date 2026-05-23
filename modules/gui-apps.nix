@@ -18,6 +18,7 @@
     freecad
     heroic
     ollama
+    obsidian
   ];
 
   # Enable gnome-keyring for secret storage (needed by spot, etc.)

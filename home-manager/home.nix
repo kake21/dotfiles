@@ -25,13 +25,88 @@
 
         modules-left = [ "hyprland/workspaces" ];
         modules-center = [ "clock" ];
-        modules-right = [ "pulseaudio" "network" "battery" ];
+        modules-right = [
+          "pulseaudio"
+          "network"
+          "bluetooth"
+          "battery"
+        ];
 
         clock = {
           format = "{:%H:%M}";
         };
+
+        pulseaudio = {
+          format = "{icon} {volume}%";
+          format-muted = "󰖁 muted";
+
+          format-icons = {
+            default = [
+              "󰕿"
+              "󰖀"
+              "󰕾"
+            ];
+          };
+        };
+
+        network = {
+          format-wifi = " {essid}";
+          format-ethernet = "󰈀 Connected";
+          format-disconnected = "󰖪 Disconnected";
+        };
+
+        bluetooth = {
+          format = " {status}";
+          format-connected = " {device_alias}";
+          format-connected-battery = " {device_alias} {device_battery_percentage}%";
+          tooltip-format = "{controller_alias}\t{controller_address}";
+          tooltip-format-connected =
+            "{device_enumerate}";
+
+          tooltip-format-enumerate-connected =
+            "{device_alias}\t{device_address}";
+        };
+
+        battery = {
+          states = {
+            warning = 30;
+            critical = 15;
+          };
+
+          format = "{icon} {capacity}%";
+          format-charging = "󰂄 {capacity}%";
+          format-plugged = " {capacity}%";
+
+          format-icons = [
+            "󰁺"
+            "󰁻"
+            "󰁼"
+            "󰁽"
+            "󰁾"
+            "󰁿"
+            "󰂀"
+            "󰂁"
+            "󰂂"
+            "󰁹"
+          ];
+        };
       };
     };
+
+    style = with config.lib.stylix.colors;''
+      #pulseaudio,
+      #network,
+      #bluetooth,
+      #battery {
+        background: #${base01};
+        padding: 0 8px;
+        margin: 4px 2px;
+        border-radius: 8px;
+      }
+      .modules-right {
+        margin-right: 2px;
+      }
+    '';
   };
 
 
