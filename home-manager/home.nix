@@ -109,6 +109,16 @@
     '';
   };
 
+  services.mako = {
+    enable = true;
+    anchor = "top-right";
+    margin = "10";
+    padding = "10";
+    borderSize = 2;
+    borderRadius = 8;
+    defaultTimeout = 5000;
+  };
+
 
   wayland.windowManager.hyprland = {
     enable = true;

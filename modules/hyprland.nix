@@ -53,7 +53,6 @@
     hyprpicker
     hyprsunset
     wl-clipboard
-    mako
     waybar # I should check if waybar is used, but it's common for hyprland
   ];
 }
