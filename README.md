@@ -62,3 +62,13 @@ sudo nixos-rebuild switch --flake .#host
 
 - **Update Flake Lock:** `nix flake update`
 - **Garbage Collection:** `nix-collect-garbage -d`
+
+## ISO Creation
+
+If you need a portable ISO with WebStorm to install this configuration on a new machine:
+
+```bash
+nix build .#nixosConfigurations.iso.config.system.build.isoImage
+```
+
+The resulting ISO will be in `result/iso/`.

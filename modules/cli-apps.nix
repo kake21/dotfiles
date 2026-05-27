@@ -17,8 +17,13 @@
     mesa
     vim
     wget
+    fd
+    tree-sitter
+    ripgrep
     pamixer
     feh
+    spotify-player
+    github-copilot-cli
   ];
 
   # Enable NetworkManager Applet (provides nm-applet and nm-connection-editor)

@@ -5,8 +5,6 @@
     chromium
     bitwarden-desktop
     spotify
-    spotify-player
-    discord
     signal-desktop
     inkscape
     prismlauncher
