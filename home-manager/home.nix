@@ -30,6 +30,7 @@ in
         modules-left = [ "hyprland/workspaces" ];
         modules-center = [ "clock" ];
         modules-right = [
+          "cpu"
           "pulseaudio"
           "network"
           "bluetooth"
@@ -38,6 +39,11 @@ in
 
         clock = {
           format = "{:%H:%M}";
+        };
+
+        cpu = {
+        	format = " {icon}";
+          format-icons = ["▁" "▂" "▃" "▄" "▅" "▆" "▇" "█"];
         };
 
         pulseaudio = {
@@ -98,6 +104,7 @@ in
     };
 
     style = with config.lib.stylix.colors;''
+      #cpu,
       #pulseaudio,
       #network,
       #bluetooth,
@@ -489,6 +496,7 @@ in
   imports = [ 
     inputs.nixcord.homeModules.nixcord
     ../modules/nixvim.nix
+    ../modules/obsidian.nix
   ];
     programs.nixcord = {
       enable = true;
@@ -499,4 +507,6 @@ in
         frameless = true;
       };
     };
+
+    obsidian.enable = true;
 }
