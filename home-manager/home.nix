@@ -317,8 +317,13 @@ in
         profileNames = [ profileUserName ];
         colorTheme.enable = true;
       };
+      spicetify.enable = true;
       wofi.enable = false;
     };
+  };
+
+  programs.spicetify = {
+    enable = true;
   };
 
   programs.wofi = {
@@ -495,6 +500,7 @@ in
 
   imports = [ 
     inputs.nixcord.homeModules.nixcord
+    inputs.spicetify-nix.homeManagerModules.default
     ../modules/nixvim.nix
     ../modules/obsidian.nix
   ];
