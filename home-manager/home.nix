@@ -1,6 +1,7 @@
 { config, inputs, lib, pkgs, osConfig, ... }:
 let
   profileUserName = "vegard";
+  isLaptop = osConfig.networking.hostName == "laptop";
 in
 {
   # Home Manager Configuration
@@ -35,6 +36,7 @@ in
           "network"
           "bluetooth"
           "battery"
+          "battery#wattage"
         ];
 
         clock = {
@@ -100,6 +102,11 @@ in
             "󰁹"
           ];
         };
+
+        "battery#wattage" = {
+          format = "{power:.1f}W";
+          tooltip = false;
+        };
       };
     };
 
@@ -108,7 +115,8 @@ in
       #pulseaudio,
       #network,
       #bluetooth,
-      #battery {
+      #battery,
+      #wattage {
         background: #${base01};
         padding: 0 8px;
         margin: 4px 2px;
@@ -137,9 +145,10 @@ in
   wayland.windowManager.hyprland = {
     enable = true;
 
-    plugins = [
-      inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
-    ];
+    plugins =
+      [
+        inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
+      ];
 
     settings = {
       "$mod" = "SUPER";
@@ -182,15 +191,6 @@ in
           natural_scroll = true;
           scroll_factor = 0.2;
         };
-      };
-
-      gesture = [
-        "3, horizontal, workspace"
-      ];
-
-      gestures = {
-        workspace_swipe_invert = true;
-        workspace_swipe_distance = 300;
       };
 
       general = {
@@ -265,6 +265,29 @@ in
           # Fullscreen
           "$mod, RETURN, fullscreen"
 
+          # Workspaces
+          "$mod, 1, workspace, 1"
+          "$mod, 2, workspace, 2"
+          "$mod, 3, workspace, 3"
+          "$mod, 4, workspace, 4"
+          "$mod, 5, workspace, 5"
+          "$mod, 6, workspace, 6"
+          "$mod, 7, workspace, 7"
+          "$mod, 8, workspace, 8"
+          "$mod, 9, workspace, 9"
+          "$mod, 0, workspace, 10"
+
+          "$mod SHIFT, 1, movetoworkspace, 1"
+          "$mod SHIFT, 2, movetoworkspace, 2"
+          "$mod SHIFT, 3, movetoworkspace, 3"
+          "$mod SHIFT, 4, movetoworkspace, 4"
+          "$mod SHIFT, 5, movetoworkspace, 5"
+          "$mod SHIFT, 6, movetoworkspace, 6"
+          "$mod SHIFT, 7, movetoworkspace, 7"
+          "$mod SHIFT, 8, movetoworkspace, 8"
+          "$mod SHIFT, 9, movetoworkspace, 9"
+          "$mod SHIFT, 0, movetoworkspace, 10"
+
           # Media keys (using pamixer and playerctl)
           ", XF86AudioRaiseVolume, exec, pamixer -i 1"
           ", XF86AudioLowerVolume, exec, pamixer -d 1"
@@ -292,6 +315,26 @@ in
           "$mod, mouse:272, movewindow"
           "$mod, mouse:273, resizewindow"
       ];
+    } // lib.optionalAttrs isLaptop {
+      gesture = [
+        "3, horizontal, workspace"
+        "3, up, dispatcher, hyprexpo:expo, toggle"
+      ];
+
+      gestures = {
+        workspace_swipe_invert = true;
+        workspace_swipe_distance = 300;
+      };
+
+      plugin = {
+        #hyprexpo = {
+        #  columns = 3;
+        #  gap_size = 5;
+        #  bg_col = "rgb(111111)";
+        #  workspace_method = "center current";
+        #  gesture_distance = 300;
+        #};
+      };
     };
   };
 
