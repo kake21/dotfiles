@@ -11,6 +11,7 @@
     ../../modules/tailscale.nix
     ../../modules/ssh.nix
     ../../modules/nvidia.nix
+    ../../modules/useremote.nix
   ];
 
   networking.hostName = "laptop";
@@ -34,14 +35,7 @@
 
   # Laptop specific settings
   services.libinput.enable = true; # Enable touchpad support
-  
-  # Enable Ollama
-  services.ollama = {
-    enable = true;
-    package = pkgs.ollama-cuda;
-    host = "0.0.0.0";
-    openFirewall = true;
-  };
+
 
   # Power management
   powerManagement.enable = true;
