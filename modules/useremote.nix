@@ -6,7 +6,7 @@
       {
         hostName = "nvex";
         sshUser = "remotebuild";
-        sshKey = "/root/.ssh/remotemachine";
+        sshKey = "/root/.ssh/remotebuild";
 
         system = "x86_64-linux";
 

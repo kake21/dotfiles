@@ -28,7 +28,7 @@ cd /mnt/etc/home/USERNAME/dotfiles
 ```
 
 **Important:** Update the user and hostname in the configuration if you plan to change them. Currently, it's set to:
-- **Hostname:** `vex` && `laptop`
+- **Hostname:** `vex`, `laptop`, and `lxc`
 - **Username:** `vegard`
 - **Initial Passwd:** `changeme`
 
@@ -62,6 +62,14 @@ sudo nixos-rebuild switch --flake .#host
 
 - **Update Flake Lock:** `nix flake update`
 - **Garbage Collection:** `nix-collect-garbage -d`
+
+## Proxmox LXC Host
+
+Use the `lxc` host profile to build or switch a Proxmox LXC guest configuration:
+
+```bash
+sudo nixos-rebuild switch --flake .#lxc
+```
 
 ## ISO Creation
 

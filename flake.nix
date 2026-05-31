@@ -39,7 +39,7 @@
   outputs = { self, nixpkgs, home-manager, hyprland, stylix, hy3, nixvim, ... }@inputs:
   let
     system = "x86_64-linux";
-    mkHost = hostName: nixpkgs.lib.nixosSystem {
+    mkDesktopHost = hostName: nixpkgs.lib.nixosSystem {
       inherit system;
       specialArgs = { inherit inputs; };
       modules = [
@@ -59,11 +59,21 @@
         }
       ];
     };
+
+    # Minimal host builder for server/container profiles (no Home Manager desktop stack).
+    mkHeadlessHost = hostName: nixpkgs.lib.nixosSystem {
+      inherit system;
+      specialArgs = { inherit inputs; };
+      modules = [
+        ./hosts/${hostName}/configuration.nix
+      ];
+    };
   in
   {
     nixosConfigurations = {
-      vex = mkHost "vex";
-      laptop = mkHost "laptop";
+      vex = mkDesktopHost "vex";
+      laptop = mkDesktopHost "laptop";
+      lxc = mkHeadlessHost "lxc";
       iso = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
