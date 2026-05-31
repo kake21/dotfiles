@@ -16,6 +16,7 @@
     ../../modules/ssh.nix
     ../../modules/sunshine.nix
     # ../../modules/star-citizen.nix
+    ../../modules/remote.nix
   ];
 
   networking.hostName = "vex";

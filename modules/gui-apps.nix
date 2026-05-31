@@ -16,6 +16,8 @@
     freecad
     heroic
     ollama
+    xournalpp
+    code-cursor
 	];
 
   # Enable gnome-keyring for secret storage (needed by spot, etc.)
