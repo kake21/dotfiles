@@ -21,7 +21,7 @@ in
   programs.hyprlock.enable = true;
 
   programs.waybar = {
-    enable = osConfig.networking.hostName == "laptop";
+    enable = osConfig.networking.hostName != "vex"; # Don't start waybar on vex
 
     settings = {
       mainBar = {
@@ -547,15 +547,16 @@ in
     ../modules/nixvim.nix
     ../modules/obsidian.nix
   ];
-    programs.nixcord = {
-      enable = true;
 
-      vesktop.enable = true;
+  programs.nixcord = {
+    enable = true;
 
-      config = {
-        frameless = true;
-      };
+    vesktop.enable = true;
+
+    config = {
+      frameless = true;
     };
+  };
 
-    obsidian.enable = true;
+  obsidian.enable = true;
 }

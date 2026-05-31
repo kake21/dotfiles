@@ -32,6 +32,8 @@
   services.ollama = {
     enable = true;
     package = pkgs.ollama-cuda;
+    host = "0.0.0.0";
+    openFirewall = true;
   };
 
   services.xserver.displayManager.setupCommands = ''
