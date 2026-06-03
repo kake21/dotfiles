@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   # Enable the OpenSSH daemon.
@@ -9,7 +9,7 @@
       AllowUsers = null; # Allow all users or specify here
       UseDns = true;
       X11Forwarding = false;
-      PermitRootLogin = "no"; # "no", "yes", "without-password", "prohibit-password"
+      PermitRootLogin = lib.mkDefault "no"; # "no", "yes", "without-password", "prohibit-password"
     };
   };
 

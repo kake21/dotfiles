@@ -10,7 +10,8 @@
     ../../modules/tailscale.nix
   ];
 
-  networking.hostName = "lxc";
+  # Default hostname for the generic LXC profile; child hosts can override.
+  networking.hostName = lib.mkDefault "lxc";
 
   # Avoid NetworkManager in containers; Proxmox provides networking.
   networking.networkmanager.enable = lib.mkForce false;
@@ -36,6 +37,7 @@
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
     auto-optimise-store = true;
+    trusted-users = [ "root" "vegard" ];
   };
 
   nix.gc = {
@@ -54,3 +56,4 @@
   system.stateVersion = "25.11";
 }
 
+ 
