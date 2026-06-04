@@ -44,6 +44,9 @@
 
   # Enable unfree licenses
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-39.8.10" # required by pkgs.obsidian
+  ];
 
   # Enable nix-ld to run pre-compiled binaries (e.g., JetBrains Remote Development)
   programs.nix-ld.enable = true;

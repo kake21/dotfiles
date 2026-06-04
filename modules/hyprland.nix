@@ -47,7 +47,6 @@
       exec Hyprland
     '')
     hyprlauncher
-    wofi
     hyprshot
     slurp
     hyprpicker
