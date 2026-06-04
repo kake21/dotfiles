@@ -75,6 +75,7 @@
       laptop = mkDesktopHost "laptop";
       lxc = mkHeadlessHost "lxc";
       lxc-obsidian = mkHeadlessHost "lxc/obsidian";
+      lxc-heretic = mkHeadlessHost "lxc/heretic";
       iso = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
