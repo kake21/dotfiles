@@ -17,9 +17,12 @@ case "$LXC_NAME" in
   heretic)
     FLAKE_PATH=".#nixosConfigurations.lxc-heretic.config.system.build.tarball"
     ;;
+  minecraft)
+    FLAKE_PATH=".#nixosConfigurations.lxc-minecraft.config.system.build.tarball"
+    ;;
   *)
     echo "Unknown LXC: $LXC_NAME"
-    echo "Available options: lxc, obsidian, heretic"
+    echo "Available options: lxc, obsidian, heretic, minecraft"
     exit 1
     ;;
 esac

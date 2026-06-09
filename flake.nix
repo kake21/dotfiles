@@ -34,9 +34,24 @@
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-minecraft = {
+      url = "github:Infinidoge/nix-minecraft";
+      inputs.nixpkgs.follows = "nixpkgs";
+
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, hyprland, stylix, hy3, nixvim, ... }@inputs:
+  outputs = {
+    self,
+    nixpkgs,
+    home-manager,
+    hyprland,
+    stylix,
+    hy3,
+    nixvim,
+    ...
+    }@inputs:
   let
     system = "x86_64-linux";
     mkDesktopHost = hostName: nixpkgs.lib.nixosSystem {
@@ -76,6 +91,7 @@
       lxc = mkHeadlessHost "lxc";
       lxc-obsidian = mkHeadlessHost "lxc/obsidian";
       lxc-heretic = mkHeadlessHost "lxc/heretic";
+      lxc-minecraft = mkHeadlessHost "lxc/minecraft";
       iso = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
