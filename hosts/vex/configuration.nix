@@ -40,4 +40,8 @@
     ${pkgs.xrandr}/bin/xrandr --output DP-2 --mode 5120x1440 --rate 240 --primary
     ${pkgs.xrandr}/bin/xrandr --output DP-4 --mode 3840x2160 --pos 640x-2160
   '';
+
+  # Bluetooth
+  services.blueman.enable = true;
+  hardware.bluetooth.enable = true;
 }
