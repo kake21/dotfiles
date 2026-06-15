@@ -12,6 +12,8 @@
     ../../modules/ssh.nix
     ../../modules/nvidia.nix
     ../../modules/useremote.nix
+    ../../modules/hyperland.nix
+    ../../modules/jetbrains.nix
   ];
 
   networking.hostName = "laptop";

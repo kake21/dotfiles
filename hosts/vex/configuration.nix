@@ -20,6 +20,8 @@
     ../../modules/sunshine.nix
     # ../../modules/star-citizen.nix
     ../../modules/remote.nix
+    ../../modules/hyperland.nix
+    ../../modules/jetbrains.nix
   ];
 
   # Nvidia specific environment variables for start-hyprland
