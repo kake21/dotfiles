@@ -1,8 +1,11 @@
 { config, lib, pkgs, inputs, ... }:
 
 {
+  networking.hostName = "vex";
+  my.username = "vegard";
+
   imports = [
-    ./hardware-configuration.nix # Specific to vex
+    ./hardware-configuration.nix
     ../../modules/system.nix
     ../../modules/networking.nix
     ../../modules/users.nix
@@ -18,8 +21,6 @@
     # ../../modules/star-citizen.nix
     ../../modules/remote.nix
   ];
-
-  networking.hostName = "vex";
 
   # Nvidia specific environment variables for start-hyprland
   environment.sessionVariables = {

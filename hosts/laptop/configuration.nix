@@ -15,6 +15,7 @@
   ];
 
   networking.hostName = "laptop";
+  my.username = "vegard";
 
   # Nvidia PRIME
   hardware.nvidia.prime = {

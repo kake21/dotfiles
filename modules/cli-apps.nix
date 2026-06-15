@@ -2,6 +2,7 @@
 
 {
   environment.systemPackages = with pkgs; [
+    tree
     cmake
     gcc
     hidapi

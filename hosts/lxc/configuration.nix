@@ -12,6 +12,7 @@
 
   # Default hostname for the generic LXC profile; child hosts can override.
   networking.hostName = lib.mkDefault "lxc";
+  my.username = "vegard";
 
   # Avoid NetworkManager in containers; Proxmox provides networking.
   networking.networkmanager.enable = lib.mkForce false;

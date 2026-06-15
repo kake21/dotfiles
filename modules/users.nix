@@ -1,13 +1,16 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.vegard = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "docker" "input" ]; # Enable ‘sudo’ for the user.
-    initialPassword = "changeme";
-    packages = with pkgs; [
-      tree
-    ];
+  options.my.username = lib.mkOption {
+    type = lib.types.str;
+    description = "Primary username";
+  };
+
+  config = {
+    users.users.${config.my.username} = {
+      isNormalUser = true;
+      extraGroups = [ "wheel" "networkmanager" "docker" "input" ];
+      initialPassword = "changeme";
+    };
   };
 }

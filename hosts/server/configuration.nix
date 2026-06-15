@@ -12,4 +12,5 @@
   ];
 
   networking.hostName = "nix-server";
+  my.username = "vegard";
 }
