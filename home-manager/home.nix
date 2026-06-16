@@ -145,6 +145,8 @@ in
   wayland.windowManager.hyprland = {
     enable = true;
 
+    configType = "hyprlang";
+
     plugins =
       [
         inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
@@ -341,6 +343,7 @@ in
 
   programs.firefox = {
     enable = true;
+    configPath = "${config.xdg.configHome}/mozilla/firefox";
 
     profiles = {
       "${profileUserName}" = {
