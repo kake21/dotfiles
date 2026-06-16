@@ -15,6 +15,7 @@
   ];
 
   networking.hostName = "laptop";
+  my.username = "vegard";
 
   # Nvidia PRIME
   hardware.nvidia.prime = {
@@ -81,4 +82,7 @@
   # Bluetooth
   services.blueman.enable = true;
   hardware.bluetooth.enable = true;
+
+  # Disks
+  services.udisks2.enable = true;
 }
