@@ -3,10 +3,10 @@
 {
   environment.systemPackages = with pkgs; [
     chromium
-    bitwarden-desktop
+    #bitwarden-desktop
     spotify
     signal-desktop
-    inkscape
+    #inkscape
     prismlauncher
     mission-center
     pavucontrol
@@ -17,7 +17,8 @@
     heroic
     ollama
     xournalpp
-    code-cursor
+    #code-cursor
+    nemo
 	];
 
   # Enable gnome-keyring for secret storage (needed by spot, etc.)
