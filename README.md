@@ -2,13 +2,6 @@
 
 This repository contains the NixOS configuration for my personal machines.
 
-## Features
-- **Window Manager:** Hyprland (Wayland)
-- **Terminal:** Kitty
-- **Shell:** Bash (standard)
-- **Theme:** Stylix (auto-theming everything)
-- **Terminal font:** JetBrainsMonoNFM-Regular
-
 ## Installation
 
 Setup partitions and mount them as shown in the NixOS Installation guide:
@@ -28,7 +21,7 @@ cd /mnt/etc/home/USERNAME/dotfiles
 ```
 
 **Important:** Update the user and hostname in the configuration if you plan to change them. Currently, it's set to:
-- **Hostname:** `vex`, `laptop`, and `lxc`
+- **Hostname:** `vex`, `laptop`, `lxc` and more
 - **Username:** `vegard`
 - **Initial Passwd:** `changeme`
 
