@@ -17,6 +17,7 @@
   ];
 
   networking.hostName = "xc";
+  my.username = "vegard";
 
   # Nvidia specific environment variables for start-hyprland
   environment.sessionVariables = {
