@@ -87,6 +87,7 @@
   {
     nixosConfigurations = {
       vex = mkDesktopHost "vex";
+      xc = mkDesktopHost "xc";
       laptop = mkDesktopHost "laptop";
       lxc = mkHeadlessHost "lxc";
       lxc-obsidian = mkHeadlessHost "lxc/obsidian";

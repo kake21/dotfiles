@@ -2,27 +2,21 @@
 
 {
   imports = [
-    ./hardware-configuration.nix # Specific to vex
+    ./hardware-configuration.nix
     ../../modules/system.nix
     ../../modules/networking.nix
     ../../modules/users.nix
     ../../modules/desktop.nix
     ../../modules/nvidia.nix
-    ../../modules/wivrn.nix
     ../../modules/steam.nix
     ../../modules/stylix.nix
     ../../modules/docker.nix
     ../../modules/tailscale.nix
     ../../modules/ssh.nix
-    ../../modules/sunshine.nix
-    # ../../modules/star-citizen.nix
     ../../modules/remote.nix
-    ../../modules/hyperland.nix
-    ../../modules/jetbrains.nix
   ];
 
-  networking.hostName = "vex";
-  my.username = "vegard";
+  networking.hostName = "xc";
 
   # Nvidia specific environment variables for start-hyprland
   environment.sessionVariables = {
@@ -38,13 +32,4 @@
     host = "0.0.0.0";
     openFirewall = true;
   };
-
-  services.xserver.displayManager.setupCommands = ''
-    ${pkgs.xrandr}/bin/xrandr --output DP-2 --mode 5120x1440 --rate 240 --primary
-    ${pkgs.xrandr}/bin/xrandr --output DP-4 --mode 3840x2160 --pos 640x-2160
-  '';
-
-  # Bluetooth
-  services.blueman.enable = true;
-  hardware.bluetooth.enable = true;
 }

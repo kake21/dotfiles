@@ -84,4 +84,7 @@
   # Bluetooth
   services.blueman.enable = true;
   hardware.bluetooth.enable = true;
+
+  # Disks
+  services.udisks2.enable = true;
 }
