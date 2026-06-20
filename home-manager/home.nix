@@ -181,7 +181,6 @@ in
       monitor = [
           "DP-2, 5120x1440@240, 0x0, 1"
           "DP-3, 3840x2160@59.99700, 640x-2160, 1"
-          "HDMI-A-1, 2560x1440@144.00, 0x0, 1" # Niggo setup
       ];
 
       input = {
@@ -327,16 +326,6 @@ in
       gestures = {
         workspace_swipe_invert = true;
         workspace_swipe_distance = 300;
-      };
-
-      plugin = {
-        #hyprexpo = {
-        #  columns = 3;
-        #  gap_size = 5;
-        #  bg_col = "rgb(111111)";
-        #  workspace_method = "center current";
-        #  gesture_distance = 300;
-        #};
       };
     };
   };
@@ -549,6 +538,7 @@ in
     inputs.spicetify-nix.homeManagerModules.default
     ../modules/nixvim.nix
     ../modules/obsidian.nix
+    inputs.noctalia.homeModules.default
   ];
 
   programs.nixcord = {
