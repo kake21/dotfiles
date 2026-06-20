@@ -25,6 +25,7 @@
     feh
     spotify-player
     github-copilot-cli
+    opencode
   ];
 
   # Enable NetworkManager Applet (provides nm-applet and nm-connection-editor)
