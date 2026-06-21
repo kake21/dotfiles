@@ -290,16 +290,17 @@ in
           "$mod SHIFT, 9, movetoworkspace, 9"
           "$mod SHIFT, 0, movetoworkspace, 10"
 
-          # Media keys (using pamixer and playerctl)
-          ", XF86AudioRaiseVolume, exec, pamixer -i 1"
-          ", XF86AudioLowerVolume, exec, pamixer -d 1"
-          ", XF86AudioMute, exec, pamixer -t"
-          ", XF86AudioPlay, exec, playerctl play-pause"
-          ", XF86AudioNext, exec, playerctl next"
-          ", XF86AudioPrev, exec, playerctl previous"
-          ", XF86AudioMicMute, exec, pamixer --default-source -t"
-          ", XF86MonBrightnessUp, exec, brightnessctl set 5%+"
-          ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
+          # Media keys (using swayosd)
+          ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume +1"
+          ", XF86AudioLowerVolume, exec, swayosd-client --output-volume -1"
+          ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
+          ", XF86AudioPlay, exec, swayosd-client --playerctl play-pause"
+          ", XF86AudioNext, exec, swayosd-client --playerctl next"
+          ", XF86AudioPrev, exec, swayosd-client --playerctl previous"
+          ", XF86AudioMicMute, exec, swayosd-client --input-volume mute-toggle"
+          ", XF86MonBrightnessUp, exec, swayosd-client --brightness raise"
+          ", XF86MonBrightnessDown, exec, swayosd-client --brightness lower"
+          ", Caps_Lock, exec, swayosd-client --caps-lock"
         ];
 
       device = [
@@ -552,4 +553,9 @@ in
   };
 
   obsidian.enable = true;
+
+  services.swayosd = {
+    enable = true;
+    topMargin = 0.9;
+  };
 }
