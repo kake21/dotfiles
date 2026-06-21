@@ -17,6 +17,7 @@
     ../../modules/sunshine.nix
     # ../../modules/star-citizen.nix
     ../../modules/remote.nix
+    ../../modules/llama-cpp.nix
   ];
 
   networking.hostName = "vex";

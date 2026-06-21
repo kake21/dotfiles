@@ -15,6 +15,7 @@ in
       # Set Norwegian keyboard for Wayland (Hyprland)
       XKB_DEFAULT_LAYOUT = "no";
       HYPRSHOT_DIR = "${config.home.homeDirectory}/Pictures/Screenshots";
+      OPENAI_BASE_URL = "http://localhost:9292/v1";
     };
   };
 
@@ -181,6 +182,7 @@ in
       monitor = [
           "DP-2, 5120x1440@240, 0x0, 1"
           "DP-3, 3840x2160@59.99700, 640x-2160, 1"
+          "DP-4, 5120x1440@240, 0x0, 1"
       ];
 
       input = {
@@ -449,6 +451,28 @@ in
       }
   '';
 
+  xdg.configFile."opencode/opencode.json".text = ''
+    {
+      "$schema": "https://opencode.ai/config.json",
+      "provider": {
+        "llama-swap": {
+          "npm": "@ai-sdk/openai-compatible",
+          "name": "llama-swap (local)",
+          "options": {
+            "baseURL": "http://localhost:9292/v1",
+            "apiKey": "llama-swap"
+          },
+          "models": {
+            "qwen-3.5:9b": {
+              "id": "qwen-3.5:9b"
+            }
+          }
+        }
+      },
+      "model": "llama-swap/qwen-3.5:9b"
+    }
+  '';
+
 
   programs.fastfetch = {
     enable = true;
@@ -539,7 +563,6 @@ in
     inputs.spicetify-nix.homeManagerModules.default
     ../modules/nixvim.nix
     ../modules/obsidian.nix
-    inputs.noctalia.homeModules.default
   ];
 
   programs.nixcord = {

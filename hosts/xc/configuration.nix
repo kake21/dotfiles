@@ -14,6 +14,7 @@
     ../../modules/tailscale.nix
     ../../modules/ssh.nix
     ../../modules/remote.nix
+    ../../modules/llama-cpp.nix
   ];
 
   networking.hostName = "xc";
