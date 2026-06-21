@@ -463,7 +463,7 @@ in
             "apiKey": "llama-swap"
           },
           "models": {
-            "qwen-3.5:9b": {
+                "qwen-3.5:9b": {
               "id": "qwen-3.5:9b"
             }
           }

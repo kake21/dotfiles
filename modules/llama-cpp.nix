@@ -37,6 +37,7 @@ in
   };
 
   environment.etc."llama-swap/config.yaml".text = ''
+    globalTTL: 300
     models:
       "qwen-3.5:9b":
         cmd: |
