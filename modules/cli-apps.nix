@@ -24,6 +24,10 @@
     feh
     spotify-player
     github-copilot-cli
+    (azure-cli.withExtensions [
+      azure-cli.extensions.bastion
+      azure-cli.extensions.ssh
+    ])
   ];
 
   # Enable NetworkManager Applet (provides nm-applet and nm-connection-editor)
