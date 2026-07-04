@@ -20,11 +20,6 @@
 
     nixcord.url = "github:FlameFlag/nixcord";
 
-    hy3 = {
-      url = "github:outfoxxed/hy3";
-      inputs.hyprland.follows = "hyprland";
-    };
-
     nixvim = {
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -48,7 +43,6 @@
     home-manager,
     hyprland,
     stylix,
-    hy3,
     nixvim,
     ...
     }@inputs:
