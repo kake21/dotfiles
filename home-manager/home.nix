@@ -15,6 +15,7 @@ in
       # Set Norwegian keyboard for Wayland (Hyprland)
       XKB_DEFAULT_LAYOUT = "no";
       HYPRSHOT_DIR = "${config.home.homeDirectory}/Pictures/Screenshots";
+      OPENAI_BASE_URL = "http://localhost:9292/v1";
     };
   };
 
@@ -135,9 +136,9 @@ in
       anchor = "top-right";
       margin = 10;
       padding = 10;
-      borderSize = 2;
-      borderRadius = 8;
-      defaultTimeout = 5000;
+      "border-size" = 2;
+      "border-radius" = 8;
+      "default-timeout" = 5000;
     };
   };
 
@@ -181,7 +182,7 @@ in
       monitor = [
           "DP-2, 5120x1440@240, 0x0, 1"
           "DP-3, 3840x2160@59.99700, 640x-2160, 1"
-          "HDMI-A-1, 2560x1440@144.00, 0x0, 1" # Niggo setup
+          "DP-4, 5120x1440@240, 0x0, 1"
       ];
 
       input = {
@@ -291,16 +292,17 @@ in
           "$mod SHIFT, 9, movetoworkspace, 9"
           "$mod SHIFT, 0, movetoworkspace, 10"
 
-          # Media keys (using pamixer and playerctl)
-          ", XF86AudioRaiseVolume, exec, pamixer -i 1"
-          ", XF86AudioLowerVolume, exec, pamixer -d 1"
-          ", XF86AudioMute, exec, pamixer -t"
-          ", XF86AudioPlay, exec, playerctl play-pause"
-          ", XF86AudioNext, exec, playerctl next"
-          ", XF86AudioPrev, exec, playerctl previous"
-          ", XF86AudioMicMute, exec, pamixer --default-source -t"
-          ", XF86MonBrightnessUp, exec, brightnessctl set 5%+"
-          ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
+          # Media keys (using swayosd)
+          ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume +1"
+          ", XF86AudioLowerVolume, exec, swayosd-client --output-volume -1"
+          ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
+          ", XF86AudioPlay, exec, swayosd-client --playerctl play-pause"
+          ", XF86AudioNext, exec, swayosd-client --playerctl next"
+          ", XF86AudioPrev, exec, swayosd-client --playerctl previous"
+          ", XF86AudioMicMute, exec, swayosd-client --input-volume mute-toggle"
+          ", XF86MonBrightnessUp, exec, swayosd-client --brightness raise"
+          ", XF86MonBrightnessDown, exec, swayosd-client --brightness lower"
+          ", Caps_Lock, exec, swayosd-client --caps-lock"
         ];
 
       device = [
@@ -327,16 +329,6 @@ in
       gestures = {
         workspace_swipe_invert = true;
         workspace_swipe_distance = 300;
-      };
-
-      plugin = {
-        #hyprexpo = {
-        #  columns = 3;
-        #  gap_size = 5;
-        #  bg_col = "rgb(111111)";
-        #  workspace_method = "center current";
-        #  gesture_distance = 300;
-        #};
       };
     };
   };
@@ -459,6 +451,28 @@ in
       }
   '';
 
+  xdg.configFile."opencode/opencode.json".text = ''
+    {
+      "$schema": "https://opencode.ai/config.json",
+      "provider": {
+        "llama-swap": {
+          "npm": "@ai-sdk/openai-compatible",
+          "name": "llama-swap (local)",
+          "options": {
+            "baseURL": "http://localhost:9292/v1",
+            "apiKey": "llama-swap"
+          },
+          "models": {
+                "qwen-3.5:9b": {
+              "id": "qwen-3.5:9b"
+            }
+          }
+        }
+      },
+      "model": "llama-swap/qwen-3.5:9b"
+    }
+  '';
+
 
   programs.fastfetch = {
     enable = true;
@@ -562,4 +576,9 @@ in
   };
 
   obsidian.enable = true;
+
+  services.swayosd = {
+    enable = true;
+    topMargin = 0.9;
+  };
 }

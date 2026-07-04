@@ -19,6 +19,7 @@
     ../../modules/remote.nix
     ../../modules/hyperland.nix
     ../../modules/jetbrains.nix
+    ../../modules/llama-cpp.nix
   ];
 
   networking.hostName = "vex";

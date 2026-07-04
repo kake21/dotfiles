@@ -3,6 +3,7 @@
 {
   environment.systemPackages = with pkgs; [
     tree
+    github-cli
     cmake
     gcc
     hidapi
@@ -25,10 +26,12 @@
     feh
     spotify-player
     github-copilot-cli
+    opencode
     (azure-cli.withExtensions [
       azure-cli.extensions.bastion
       azure-cli.extensions.ssh
     ])
+    claude-code
   ];
 
   # Enable NetworkManager Applet (provides nm-applet and nm-connection-editor)

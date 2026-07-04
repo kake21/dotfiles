@@ -6,5 +6,6 @@
     jetbrains.idea
     jetbrains.dataspell
     jetbrains.clion
+    jetbrains.rust-rover
   ];
 }
