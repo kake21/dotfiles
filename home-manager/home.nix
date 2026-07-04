@@ -136,9 +136,9 @@ in
       anchor = "top-right";
       margin = 10;
       padding = 10;
-      borderSize = 2;
-      borderRadius = 8;
-      defaultTimeout = 5000;
+      "border-size" = 2;
+      "border-radius" = 8;
+      "default-timeout" = 5000;
     };
   };
 
