@@ -17,7 +17,7 @@
     ../../modules/sunshine.nix
     # ../../modules/star-citizen.nix
     ../../modules/remote.nix
-    ../../modules/hyperland.nix
+    ../../modules/hyprland.nix
     ../../modules/jetbrains.nix
     ../../modules/llama-cpp.nix
   ];

@@ -6,7 +6,6 @@
 
   imports = [
     ./hardware-configuration.nix
-    ./local-apps.nix
     ../../modules/system.nix
     ../../modules/networking.nix
     ../../modules/users.nix

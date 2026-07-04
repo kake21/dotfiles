@@ -12,7 +12,7 @@
     ../../modules/ssh.nix
     ../../modules/nvidia.nix
     ../../modules/useremote.nix
-    ../../modules/hyperland.nix
+    ../../modules/hyprland.nix
     ../../modules/jetbrains.nix
   ];
 
