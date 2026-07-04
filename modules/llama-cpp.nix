@@ -44,7 +44,7 @@ in
           ${llama-cpp}/bin/llama-server \
             -m /home/vegard/KI/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q6_K.gguf \
             --port ''${PORT} \
-            --ctx-size 32768 \
+            --ctx-size 131072 \
             --n-gpu-layers 999
   '';
 }
