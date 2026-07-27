@@ -15,7 +15,6 @@
     kitty
     freecad
     heroic
-    ollama
     xournalpp
     #code-cursor
     nemo
