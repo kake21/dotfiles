@@ -1,6 +1,15 @@
 { inputs, lib, pkgs, osConfig, ... }:
 let
   isLaptop = osConfig.networking.hostName == "laptop";
+  mod = "SUPER";
+  inline = lib.generators.mkLuaInline;
+  dsp = cmd: inline "hl.dsp.${cmd}";
+  exec = cmd: dsp "exec_cmd(${builtins.toJSON cmd})";
+  moveFocus = dir: dsp "focus({ direction = ${builtins.toJSON dir} })";
+  moveWindow = dir: dsp "window.move({ direction = ${builtins.toJSON dir} })";
+  resize = x: y: dsp "window.resize({ x = ${toString x}, y = ${toString y}, relative = true })";
+  gotoWorkspace = n: dsp "focus({ workspace = ${toString n} })";
+  moveToWorkspace = n: dsp "window.move({ workspace = ${toString n} })";
 in
 {
   programs.hyprlock.enable = true;
@@ -23,158 +32,165 @@ in
   wayland.windowManager.hyprland = {
     enable = true;
 
-    configType = "hyprlang";
+    configType = "lua";
 
     settings = {
-      "$mod" = "SUPER";
-
-      env = [
-        "LIBVA_DRIVER_NAME,nvidia"
-        "XDG_SESSION_TYPE,wayland"
-        "GBM_BACKEND,nvidia-drm"
-        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-        "NVD_BACKEND,direct"
-        "ELECTRON_OZONE_PLATFORM_HINT,auto"
-        "QT_QPA_PLATFORM,wayland;xcb"
-        "GDK_BACKEND,wayland,x11,*"
+      env = map (e: { _args = [ e.name e.value ]; }) [
+        { name = "LIBVA_DRIVER_NAME"; value = "nvidia"; }
+        { name = "XDG_SESSION_TYPE"; value = "wayland"; }
+        { name = "GBM_BACKEND"; value = "nvidia-drm"; }
+        { name = "__GLX_VENDOR_LIBRARY_NAME"; value = "nvidia"; }
+        { name = "NVD_BACKEND"; value = "direct"; }
+        { name = "ELECTRON_OZONE_PLATFORM_HINT"; value = "auto"; }
+        { name = "QT_QPA_PLATFORM"; value = "wayland;xcb"; }
+        { name = "GDK_BACKEND"; value = "wayland,x11,*"; }
       ];
 
-      misc = {
-        vrr = 0;
-      };
+      config = {
+        misc = {
+          vrr = 0;
+        };
 
-      render = {
-        direct_scanout = 0;
-      };
+        render = {
+          direct_scanout = 0;
+        };
 
-      cursor = {
-        no_hardware_cursors = false;
+        cursor = {
+          no_hardware_cursors = false;
+        };
+
+        input = {
+          kb_layout = "no";
+          follow_mouse = 1;
+          accel_profile = "flat";
+          sensitivity = 0;
+
+          touchpad = {
+            natural_scroll = true;
+            scroll_factor = 0.2;
+          };
+        };
+
+        general = {
+          gaps_in = 2;
+          gaps_out = 2;
+          border_size = 0;
+        };
+
+        decoration = {
+          rounding = 8;
+          blur = {
+            enabled = true;
+            size = 8;
+            passes = 2;
+          };
+        };
+
+        gestures = {
+          workspace_swipe_invert = true;
+          workspace_swipe_distance = 300;
+        };
       };
 
       monitor = [
-        "DP-2, 5120x1440@240, 0x0, 1"
-        "DP-3, 3840x2160@59.99700, 640x-2160, 1"
-        "HDMI-A-1, 2560x1440@144.00, 0x0, 1"
-        "DP-5, 3840x1080@59.97, 3000x0, 1"
-        "DP-4, 3840x1080@59.97, 3000x0, 1"
+        { output = "DP-2"; mode = "5120x1440@240"; position = "0x0"; scale = "1"; }
+        { output = "DP-3"; mode = "3840x2160@59.99700"; position = "640x-2160"; scale = "1"; }
+        { output = "HDMI-A-1"; mode = "2560x1440@144.00"; position = "0x0"; scale = "1"; }
+        { output = "DP-5"; mode = "3840x1080@59.97"; position = "3000x0"; scale = "1"; }
+        { output = "DP-4"; mode = "3840x1080@59.97"; position = "3000x0"; scale = "1"; }
       ];
 
-      input = {
-        kb_layout = "no";
-        follow_mouse = 1;
-        accel_profile = "flat";
-        sensitivity = 0;
-
-        touchpad = {
-          natural_scroll = true;
-          scroll_factor = 0.2;
-        };
-      };
-
-      general = {
-        gaps_in = 2;
-        gaps_out = 2;
-        border_size = 0;
-      };
-
-      exec-once = [
-        "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP DISPLAY"
-        "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP DISPLAY"
-        "gnome-keyring-daemon --start --components=secrets"
-        #"hyprctl output create headless" # Makes starcitizen not work
-        "hyprsunset"
-        "nm-applet --indicator"
-        "waybar"
+      workspace_rule = [
+        { workspace = "1"; monitor = "DP-2"; }
+        { workspace = "2"; monitor = "DP-3"; }
       ];
 
-      decoration = {
-        rounding = 8;
-        blur = {
-          enabled = true;
-          size = 8;
-          passes = 2;
-        };
+      # Runs once on startup, replacing the old exec-once list.
+      # (The dbus-update-activation-environment/systemctl handover line is
+      # already generated separately by the systemd.enable integration below.)
+      on = {
+        _args = [
+          "hyprland.start"
+          (inline ''
+            function()
+              hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP DISPLAY")
+              hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP DISPLAY")
+              hl.exec_cmd("gnome-keyring-daemon --start --components=secrets")
+              hl.exec_cmd("hyprsunset")
+              hl.exec_cmd("nm-applet --indicator")
+              hl.exec_cmd("waybar")
+            end
+          '')
+        ];
       };
 
-      workspace = [
-        "1, monitor:DP-2"
-        "2, monitor:DP-3"
-      ];
+      bind =
+        [
+          { _args = [ "${mod} + F" (exec "firefox") ]; }
+          { _args = [ "${mod} + Q" (exec "kitty") ]; }
+          { _args = [ "${mod} + R" (exec "wofi --show drun") ]; }
 
-      bind = [
-        "$mod, F, exec, firefox"
-        "$mod, Q, exec, kitty"
-        "$mod, R, exec, wofi --show drun"
+          # Screenshot
+          { _args = [ "${mod} + SHIFT + S" (exec "hyprshot -m region") ]; }
+          { _args = [ "Print" (exec "hyprshot -m region") ]; }
+          { _args = [ "ALT + Print" (exec "hyprshot -m window") ]; }
+          { _args = [ "CTRL + Print" (exec "hyprshot -m output") ]; }
 
-        # Screenshot
-        "$mod SHIFT, S, exec, hyprshot -m region"
-        ", Print, exec, hyprshot -m region"
-        "ALT, Print, exec, hyprshot -m window"
-        "CTRL, Print, exec, hyprshot -m output"
+          # Colorpicker
+          { _args = [ "${mod} + SHIFT + C" (exec "hyprpicker -a") ]; }
 
-        # Colorpicker
-        "$mod SHIFT, C, exec, hyprpicker -a"
+          { _args = [ "${mod} + C" (dsp "window.close()") ]; }
+          { _args = [ "${mod} + M" (dsp "exit()") ]; }
+          { _args = [ "${mod} + SPACE" (dsp "window.float({ action = \"toggle\" })") ]; }
 
-        "$mod, C, killactive"
-        "$mod, M, exit"
-        "$mod, SPACE, togglefloating"
+          # Focus movement (vim style)
+          { _args = [ "${mod} + H" (moveFocus "left") ]; }
+          { _args = [ "${mod} + J" (moveFocus "down") ]; }
+          { _args = [ "${mod} + K" (moveFocus "up") ]; }
+          { _args = [ "${mod} + L" (moveFocus "right") ]; }
+          { _args = [ "${mod} + ESCAPE" (exec "hyprlock") ]; }
 
-        # Focus movement (vim style)
-        "$mod, H, movefocus, l"
-        "$mod, J, movefocus, d"
-        "$mod, K, movefocus, u"
-        "$mod, L, movefocus, r"
-        "$mod, ESCAPE, exec, hyprlock"
+          # Move windows
+          { _args = [ "${mod} + SHIFT + H" (moveWindow "left") ]; }
+          { _args = [ "${mod} + SHIFT + L" (moveWindow "right") ]; }
+          { _args = [ "${mod} + SHIFT + K" (moveWindow "up") ]; }
+          { _args = [ "${mod} + SHIFT + J" (moveWindow "down") ]; }
 
-        # Move windows
-        "$mod SHIFT, H, movewindow, l"
-        "$mod SHIFT, L, movewindow, r"
-        "$mod SHIFT, K, movewindow, u"
-        "$mod SHIFT, J, movewindow, d"
+          # Resize windows
+          { _args = [ "${mod} + CTRL + H" (resize (-60) 0) ]; }
+          { _args = [ "${mod} + CTRL + L" (resize 60 0) ]; }
+          { _args = [ "${mod} + CTRL + K" (resize 0 (-60)) ]; }
+          { _args = [ "${mod} + CTRL + J" (resize 0 60) ]; }
 
-        # Resize windows
-        "$mod CTRL, H, resizeactive, -60 0"
-        "$mod CTRL, L, resizeactive, 60 0"
-        "$mod CTRL, K, resizeactive, 0 -60"
-        "$mod CTRL, J, resizeactive, 0 60"
+          # Fullscreen
+          { _args = [ "${mod} + RETURN" (dsp "window.fullscreen()") ]; }
 
-        # Fullscreen
-        "$mod, RETURN, fullscreen"
+          # Mouse move/resize
+          { _args = [ "${mod} + mouse:272" (dsp "window.drag()") { mouse = true; } ]; }
+          { _args = [ "${mod} + mouse:273" (dsp "window.resize()") { mouse = true; } ]; }
 
+          # Media keys (using pamixer and playerctl)
+          { _args = [ "XF86AudioRaiseVolume" (exec "pamixer -i 1") ]; }
+          { _args = [ "XF86AudioLowerVolume" (exec "pamixer -d 1") ]; }
+          { _args = [ "XF86AudioMute" (exec "pamixer -t") ]; }
+          { _args = [ "XF86AudioPlay" (exec "playerctl play-pause") ]; }
+          { _args = [ "XF86AudioNext" (exec "playerctl next") ]; }
+          { _args = [ "XF86AudioPrev" (exec "playerctl previous") ]; }
+          { _args = [ "XF86AudioMicMute" (exec "pamixer --default-source -t") ]; }
+          { _args = [ "XF86MonBrightnessUp" (exec "brightnessctl set 5%+") ]; }
+          { _args = [ "XF86MonBrightnessDown" (exec "brightnessctl set 5%-") ]; }
+        ]
         # Workspaces
-        "$mod, 1, workspace, 1"
-        "$mod, 2, workspace, 2"
-        "$mod, 3, workspace, 3"
-        "$mod, 4, workspace, 4"
-        "$mod, 5, workspace, 5"
-        "$mod, 6, workspace, 6"
-        "$mod, 7, workspace, 7"
-        "$mod, 8, workspace, 8"
-        "$mod, 9, workspace, 9"
-        "$mod, 0, workspace, 10"
-
-        "$mod SHIFT, 1, movetoworkspace, 1"
-        "$mod SHIFT, 2, movetoworkspace, 2"
-        "$mod SHIFT, 3, movetoworkspace, 3"
-        "$mod SHIFT, 4, movetoworkspace, 4"
-        "$mod SHIFT, 5, movetoworkspace, 5"
-        "$mod SHIFT, 6, movetoworkspace, 6"
-        "$mod SHIFT, 7, movetoworkspace, 7"
-        "$mod SHIFT, 8, movetoworkspace, 8"
-        "$mod SHIFT, 9, movetoworkspace, 9"
-        "$mod SHIFT, 0, movetoworkspace, 10"
-
-        # Media keys (using pamixer and playerctl)
-        ", XF86AudioRaiseVolume, exec, pamixer -i 1"
-        ", XF86AudioLowerVolume, exec, pamixer -d 1"
-        ", XF86AudioMute, exec, pamixer -t"
-        ", XF86AudioPlay, exec, playerctl play-pause"
-        ", XF86AudioNext, exec, playerctl next"
-        ", XF86AudioPrev, exec, playerctl previous"
-        ", XF86AudioMicMute, exec, pamixer --default-source -t"
-        ", XF86MonBrightnessUp, exec, brightnessctl set 5%+"
-        ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
-      ];
+        ++ map
+          (n: {
+            _args = [ "${mod} + ${toString (lib.mod n 10)}" (gotoWorkspace n) ];
+          })
+          (lib.range 1 10)
+        ++ map
+          (n: {
+            _args = [ "${mod} + SHIFT + ${toString (lib.mod n 10)}" (moveToWorkspace n) ];
+          })
+          (lib.range 1 10);
 
       device = [
         {
@@ -187,30 +203,19 @@ in
         }
       ];
 
-      bindm = [
-        "$mod, mouse:272, movewindow"
-        "$mod, mouse:273, resizewindow"
-      ];
-    } // lib.optionalAttrs isLaptop {
+      # hyprexpo isn't loaded (plugin block below is disabled), so its
+      # gesture binding isn't ported - it wasn't functional before either.
       gesture = [
-        "3, horizontal, workspace"
-        "3, up, dispatcher, hyprexpo:expo, toggle"
+        { fingers = 3; direction = "horizontal"; action = "workspace"; }
       ];
 
-      gestures = {
-        workspace_swipe_invert = true;
-        workspace_swipe_distance = 300;
-      };
-
-      plugin = {
-        #hyprexpo = {
-        #  columns = 3;
-        #  gap_size = 5;
-        #  bg_col = "rgb(111111)";
-        #  workspace_method = "center current";
-        #  gesture_distance = 300;
-        #};
-      };
+      # hyprexpo = {
+      #   columns = 3;
+      #   gap_size = 5;
+      #   bg_col = "rgb(111111)";
+      #   workspace_method = "center current";
+      #   gesture_distance = 300;
+      # };
     };
   };
 }
