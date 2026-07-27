@@ -32,14 +32,6 @@
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
   };
 
-  # Enable Ollama with CUDA acceleration
-  services.ollama = {
-    enable = true;
-    package = pkgs.ollama-cuda;
-    host = "0.0.0.0";
-    openFirewall = true;
-  };
-
   services.xserver.displayManager.setupCommands = ''
     ${pkgs.xrandr}/bin/xrandr --output DP-2 --mode 5120x1440 --rate 240 --primary
     ${pkgs.xrandr}/bin/xrandr --output DP-4 --mode 3840x2160 --pos 640x-2160
