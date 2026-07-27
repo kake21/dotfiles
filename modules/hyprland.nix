@@ -52,5 +52,6 @@
     hyprpicker
     hyprsunset
     wl-clipboard
+    wf-recorder
   ];
 }
