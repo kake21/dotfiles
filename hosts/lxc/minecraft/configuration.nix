@@ -9,6 +9,15 @@
 
   networking.hostName = "lxc-minecraft";
 
+  security.sudo.extraRules = [
+    {
+      users = [ "vegard" ];
+      commands = [
+        { command = "${pkgs.rsync}/bin/rsync"; options = [ "NOPASSWD" ]; }
+      ];
+    }
+  ];
+
   nixpkgs.overlays = [ inputs.nix-minecraft.overlay ];
 
   networking.firewall.allowedTCPPorts = [ 25565 ];
@@ -36,8 +45,8 @@
         mods = pkgs.linkFarmFromDrvs "mods" (
           builtins.attrValues {
 						biomes_o_plenty = pkgs.fetchurl {
-              url = "https://cdn.modrinth.com/data/HXF82T3G/versions/8vIRXPpR/BiomesOPlenty-neoforge-1.21.1-21.1.0.13.jar";
-              sha512 = "a238c6dbeccf9bb8f7144601e8f8fd7973d76c60344b50670141e76f49f886f6f89487eb81749dfca7c36166831924052106884a9f8dc18893261476a34d4b32";
+              url = "https://cdn.modrinth.com/data/HXF82T3G/versions/BtZKRp69/BiomesOPlenty-neoforge-1.21.1-21.1.0.14.jar";
+              sha512 = "3bj3fvgyh8754zphh7yxw2jk6zdhh04qv6y5ga4cvcilvy03ilfq4h3jrf7r8g7z0j97kmk0llxyy5jhvcb5wbw3bb9k7v1bgnxjs8m";
             };
 
             terrablender = pkgs.fetchurl {
@@ -56,23 +65,23 @@
 						};
 
             create_aeronautics = pkgs.fetchurl {
-              url = "https://cdn.modrinth.com/data/oWaK0Q19/versions/YhZLrAFC/create-aeronautics-bundled-1.21.1-1.2.1.jar";
-              sha512 = "c7899f8a693cf1b4c17a31faf64e631383f6df331b82b517ed6abe01b0464a9f10b226f0336fa8611c5af514375716c4d009d55c7f92640445c68239b63ebc03";
+              url = "https://cdn.modrinth.com/data/oWaK0Q19/versions/w7zlLnea/create-aeronautics-bundled-1.21.1-1.3.0.jar";
+              sha512 = "1wfg76ybcpx6csqh29y8k6z9idbbzxyvsgdp7j51h5k24xdndlnnj1i3db008svkirsik0f8a2zjq8d0xiqn406md18vv50cvhs5fra";
             };
 
             create_big_cannons = pkgs.fetchurl {
-              url = "https://cdn.modrinth.com/data/GWp4jCJj/versions/Xd4DDnph/createbigcannons-5.11.6%2Bmc.1.21.1.jar";
-              sha512 = "2s2sq74aamvq5n0sf0m9nkr54qnrmw66rkq3a46jzbcckfh4rlkfrwkl3s8wm03y8s9ys8nbvls3jlr1n7db7vgxdyi1zby1gjjjyha";
+              url = "https://cdn.modrinth.com/data/GWp4jCJj/versions/bOiDu0LS/createbigcannons-5.11.7%2Bmc.1.21.1.jar";
+              sha512 = "06l81k0f524a8xi3rnykzrbcnnm87biz91mg0djgvzqajvfr96dddg36ysdd893glgynfag7g9d9gn7xmcs0alvki6hyflppggi9x14";
             };
 
             create_diesel_generators = pkgs.fetchurl {
-              url = "https://cdn.modrinth.com/data/ZM3tt6p1/versions/7TPYyw7R/createdieselgenerators-1.21.1-1.3.13.jar";
-              sha512 = "258b650ba1ff3d447ca60795271d2cf4ff79de5ff1332f0cb701df0a8d7ccdd0e486be5ce1e95bcdd0dbd8cea86a6850e3c837d616978a0dd6390212ba4084a4";
+              url = "https://cdn.modrinth.com/data/ZM3tt6p1/versions/Kijd1iDy/createdieselgenerators-1.21.1-1.3.14.jar";
+              sha512 = "07rmlzlzq4y6vdv10x1vaxfj2d32gadb5lhqkp462gr4nw7kinl6q8k37g4x7i77w39kkj9j3s08c843wqpjdbmxg7rrdpx18xj11lk";
             };
 
             create_radars = pkgs.fetchurl {
-              url = "https://cdn.modrinth.com/data/BLu2Yqfq/versions/vz0tPRci/create_radar-0.4.9.2-1.21.1.jar";
-              sha512 = "ce61bd7d38ac3176d0d78def7f795001baa16b893b1607d4f6621a4b9053923cba90e474547d6e4f831d33162dfa97b418505013d5d8ce56b51087289cf852ea";
+              url = "https://cdn.modrinth.com/data/BLu2Yqfq/versions/AntNFNAx/create_radar-0.4.9.4-1.21.1.jar";
+              sha512 = "1isrj7vshxnnfrzni9s597m360097i0b32v2dpbpx5yysflxsslbkf0ml536fa5p4sxnwng3vkcgn5x1f16cds2dnd9gzirgvm13qcw";
             };
 
             farmers_delight = pkgs.fetchurl {
@@ -86,18 +95,18 @@
             };
 
             simple_voice_chat = pkgs.fetchurl {
-              url = "https://cdn.modrinth.com/data/9eGKb6K1/versions/eFhbQnrh/voicechat-neoforge-1.21.1-2.6.18.jar";
-              sha512 = "9990a758a9c1044af1dce3b96feaf7eeab91a8180fbf9e77388c1ee9983c2c0919710d87b917eb815457d926f00e68557c6a85eb8193d895ac8fe78fd7abb4c1";
+              url = "https://cdn.modrinth.com/data/9eGKb6K1/versions/8xOu3Um5/voicechat-neoforge-1.21.1-2.6.20.jar";
+              sha512 = "12wgs4j07ml1ahhn7g5ljs3rcaw7q7rgdhr7ms56kq3qz1r9vv73yacc42kwa9lqhgfnv7pq48jla1d5a0cgjsjw0zb98jg8xgjnjwk";
             };
 
             forgified_fabric_api = pkgs.fetchurl {
-              url = "https://cdn.modrinth.com/data/Aqlf1Shp/versions/7nHK7hMg/forgified-fabric-api-0.116.7%2B2.2.4%2B1.21.1.jar";
-              sha512 = "858acb32a79e7ed1f37472bd7c50e3d2f47c7d7f6e734a8cece3800eb30d565a09580c261778ea73a0ae25e10e9eb9b16866012fe61d24f671b0ffe3ae2377dd";
+              url = "https://cdn.modrinth.com/data/Aqlf1Shp/versions/dAxle9F7/forgified-fabric-api-0.116.14%2B2.3.0%2B1.21.1.jar";
+              sha512 = "1r5varn9a2h9nx9d2f2fa92b72ryg0zg43mb9x7q9z4gh7azlwvj98jajmjijrp94b7bjx3wh9bilxm3g25yzzmmdjzsklbwqc01fwx";
             };
 
             kotlin_for_forge = pkgs.fetchurl {
-              url = "https://cdn.modrinth.com/data/ordsPcFz/versions/NrSebcsG/kotlinforforge-5.11.0-all.jar";
-              sha512 = "b32faa6d616511aff4f8b32197877c53b9f8bee103884ec37c632b5d017bb59a498ec971b68d8d94787043b0c5be666a330b61d285033c341bff83ac28a90992";
+              url = "https://cdn.modrinth.com/data/ordsPcFz/versions/uhJhCT7X/kotlinforforge-5.12.0-all.jar";
+              sha512 = "0abvj5xyiycvjwk7y1c9mn5c1rw3ipl6993gd689pr9awlji3yjqs9c2s4bhlda66yxndl2idpl7pcr1f3ksbqh7zgrw5rk9lpr9hxq";
             };
 
             glitchcore = pkgs.fetchurl {
@@ -110,9 +119,9 @@
               sha512 = "19af89a2075bb10a63884fa853ebf84b02c79dc3242430ecdad056fd764fdcde367a7303276b329df01b0736e2ef264c5d80c7dc92c6aebd244f556a230bb417";
             };
 
-            sable  = pkgs.fetchurl {
-							url = "https://cdn.modrinth.com/data/T9PomCSv/versions/3FMsUjO4/sable-neoforge-1.21.1-1.2.2.jar";
-              sha512 = "0s7arh23agi1jpa4n6k935dqwl97r5gjwjrnlh1f9bv55fw3g1v5fjdiwgiwbiccfa7dln2rzqdy1dj92iwzjpyi3v5k8sskxj4cz7b";
+            sable = pkgs.fetchurl {
+							url = "https://cdn.modrinth.com/data/T9PomCSv/versions/1L6XJqnY/sable-neoforge-1.21.1-2.0.3.jar";
+              sha512 = "06swqsd1mn1rs9sdhq3q2alckvnch6slxm0jp6v56x9ma5w6ik8z03r1k9jzbrvmxd2d0n0sk3y6xlsqnkd6p4hc59j0700hsh4sg61";
             };
 
             someasssemblyreasuirted = pkgs.fetchurl {
@@ -130,29 +139,69 @@
 							sha512 = "3m5qsks15m6cnbrsi34ygvij178p8bd5mba093gcdbqvyd9anh3akxshp6a0vk7jg4kaykvwp4zg4pc0062s0d95cdbsdsxn7pix8z3";
 						};
 
+						starcatcher = pkgs.fetchurl {
+							url = "https://cdn.modrinth.com/data/h2jXvxNR/versions/gDYg666K/starcatcher-3.0.6-NEOFORGE-1.21.1.jar";
+							sha512 = "2dk0ymhgi13p4sr63qrkrfj4a2kn80h6j71nxn7wfs3kvj9spc57g38c9xiyalar4s44pwzgs5izlfkv81hcz20wayjfkxkh6nqxc54";
+						};
+
+						create_enchantment_industry = pkgs.fetchurl {
+							url = "https://cdn.modrinth.com/data/JWGBpFUP/versions/8XedJhwv/create-enchantment-industry-2.5.0-preview-alpha1.jar";
+							sha512 = "25rqr7sfim4sdfxwhsjr0rp0p6jwfgfc1iz3g1hc2z7bvbj9nah564sk3cd6n9v262vdrn0ppndb9riz3yl5al5x4aixnqwpxwgqzr8";
+						};
+
+						create_tracks_plus = pkgs.fetchurl {
+							url = "https://cdn.modrinth.com/data/E8eHF2Yl/versions/cju2ayQC/tracks_plus-1.0.5.jar";
+							sha512 = "2vql13cq6kc9ldcxfxa118apbqkrmsk3cqj7a9309ias4c8sk5klif1vdh8j20kxkpkdlm5avnxv53vy2hi4gkyasdws5pd8v7xiy39";
+						};
+
 						nochatreport = pkgs.fetchurl {
 							url = "https://cdn.modrinth.com/data/qQyHxfxd/versions/ZV8eL55E/NoChatReports-NEOFORGE-1.21.1-v2.9.1.jar";
 							sha512 = "0hww7kai6jh7lp9dipy5rjhmy31xkhs80gj0dflaiax1dcm36kj2bn1my7pg94xyh2fa2gq5s4fjqj5agra90any7lignxdnlikcai9";
 						};
 
 						jei = pkgs.fetchurl {
-							url = "https://cdn.modrinth.com/data/u6dRKJwZ/versions/YAcQ6elZ/jei-1.21.1-neoforge-19.27.0.340.jar";
-							sha512 = "2c2j95yfmy2ry5qyinp7v8cqy28bb5fpwzrvgrg1pjpnsxyb0gss21ylagwndyxhsimclzb0fzmyg30ixcp8k9yw9kzhx79r2rqxbcb";
+							url = "https://cdn.modrinth.com/data/u6dRKJwZ/versions/bEGnP8IF/jei-1.21.1-neoforge-19.39.0.368.jar";
+							sha512 = "2rhgg7l17h0q63qqq321410rpd0k7vx4whkxdyv51326d0xif9yvdn709m7d889g3h9mvil0yymv074p0y5ygq5c6h4hzzavmfxrzp0";
 						};
 
 						journey_map = pkgs.fetchurl {
-							url = "https://cdn.modrinth.com/data/lfHFW1mp/versions/1wPOSxW0/journeymap-neoforge-1.21.1-6.0.0-beta.82.jar";
-							sha512 = "1fmzrjcharxkqi52xnmcaz8866phzw8w7idpkykhd2riwjy1c9n72vgjlawwjpaynwhaan8rlpwa2x6i1jngmcal1r90klshxhkwqxq";
+							url = "https://cdn.modrinth.com/data/lfHFW1mp/versions/plEVc4Oq/journeymap-neoforge-1.21.1-6.0.1.jar";
+							sha512 = "2lp92mlkb7yilv916zrcfih3s6nfjsdj2bbqpqdfkj5k3bni5la8318ig8zmm6sw6s9mz73i4h1g4cz8z7g8xwxsaai4npqy5qipv7q";
 						};
 
 						map_frontiers = pkgs.fetchurl {
-						  url = "https://cdn.modrinth.com/data/hWlsli6y/versions/ISVYP2Bt/MapFrontiers-1.21.1-2.7.0-beta.18-neoforge.jar";
-						  sha512 = "3gqyqq8x8rypdis6wlnrln38zzzsp994rcjgln288ra9frjl3iz29rbgkw7caq817kznrg20bnzymsgrxzbm12aabkmip2hh2ivndxk";
+						  url = "https://cdn.modrinth.com/data/hWlsli6y/versions/FXlk9fAD/MapFrontiers-1.21.1-neoforge-3.0.0-beta.10.jar";
+						  sha512 = "3dqdnnj5grryc8bnvdg5vgvgha2mn0c5vc406nz04vaych87yv3cl5miz35xn7rkj1zbbgaw5ldf62cc35jnwyn28rcfx4a3s20nvrw";
 						};
 
 						forge_config_api = pkgs.fetchurl {
 							url = "https://cdn.modrinth.com/data/ohNO6lps/versions/tWlsPKJI/ForgeConfigAPIPort-v21.1.6-1.21.1-NeoForge.jar";
 							sha512 = "1v9ccrsypwrqs0zip9axagf9xswpzzc4laby605d5s6iw6lknsrpbaglb0kyv9d2r3mbzlvq9db8kl983v7l6d1286hfv74njmjaa4h";
+						};
+
+						create_dragons_plus = pkgs.fetchurl {
+							url = "https://cdn.modrinth.com/data/dzb1a5WV/versions/lSnZyFnZ/CreateDragonsPlus-1.11.2b.jar";
+							sha512 = "1vzrshcc6dw0xfbr7raw4py5hfrs6a0nphgrsmrbqys72xcry6dvlxbpaqp36k9v8v2dvlfygw1x6sdbgv22nijsj2cmsnk5qhdqd6a";
+						};
+
+						drivebywire_typewriter = pkgs.fetchurl {
+							url = "https://cdn.modrinth.com/data/lDYpnxit/versions/cPM0cfwo/drivebywire-typewriter-1.1.0-beta.2.jar";
+							sha512 = "3kq8wync1iy7aiqhhql76b2fhxl6frpa510hy72fpms2qi9mnnix875a679jjbygwcsz3n3ad6nmwczya13ab98wlxjfc9c9kw38bmy";
+						};
+
+						drivebywire = pkgs.fetchurl {
+							url = "https://cdn.modrinth.com/data/KsqvI0hD/versions/zdSwg9kS/drivebywire-0.3.0.jar";
+							sha512 = "196k92ncw0pqfjlmjjh9cwp9mzhdb0lm4wrid985j6y0x67lfy627v79iib3vr7vk0npf27dy83dzv0zp0x4rmvm5b0xqh0jv3cmr89";
+						};
+
+						create_connected = pkgs.fetchurl {
+							url = "https://cdn.modrinth.com/data/Vg5TIO6d/versions/klOWKza5/create_connected-1.3.2-mc1.21.1.jar";
+							sha512 = "3h254y15xdnmb0rca5a7bb36fgyh23x05h0wr6v5lk101312vwwfjcs3626s4b3kaq49qr36qkg140lw7q1awjzvfqn7bghxg2znyxh";
+						};
+
+						create_slice_and_dice = pkgs.fetchurl {
+							url = "https://cdn.modrinth.com/data/GmjmRQ0A/versions/cV2GZBSJ/sliceanddice-neoforge-4.3.2.jar";
+							sha512 = "320qnvj1dny8shm1hw8y8chlr7ig2240rxgh58r73k4nvd0xj2js8plzl00wgka1vxc09wrslxmlw558dgf1b2ayjd6lr5y8ry7k4sh";
 						};
           }
         );
