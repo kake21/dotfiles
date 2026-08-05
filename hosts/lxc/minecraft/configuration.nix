@@ -203,6 +203,21 @@
 							url = "https://cdn.modrinth.com/data/GmjmRQ0A/versions/cV2GZBSJ/sliceanddice-neoforge-4.3.2.jar";
 							sha512 = "320qnvj1dny8shm1hw8y8chlr7ig2240rxgh58r73k4nvd0xj2js8plzl00wgka1vxc09wrslxmlw558dgf1b2ayjd6lr5y8ry7k4sh";
 						};
+
+						create_deep_seas = pkgs.fetchurl {
+							url = "https://cdn.modrinth.com/data/mva5q4qZ/versions/UcXaPVeD/create_submarine-2.2.4.jar";
+							sha512 = "0qsw3lvb6xahbjy3pcx3kvlnxx349hj2r04k4i3rk6vf8d37j3890z78ha56lfd54zq4rc2xw8552qgw6mp0c83rm29qj1n20pxg1vb";
+						};
+
+						create_propulsion = pkgs.fetchurl {
+							url = "https://cdn.modrinth.com/data/ApkoHNO9/versions/H13U56dc/createpropulsion-1.1.5.jar";
+							sha512 = "199rfw5xdxiapqfy69jsbfi4sbhk3mgnldhl5irp2jjzbmfaqwsfgc1y4nxc1j2gdr2dlv716dbgy33zpzgjmlbnnh1j0i2rg2wk5k0";
+						};
+
+						sable_hose_connectors = pkgs.fetchurl {
+							url = "https://cdn.modrinth.com/data/YaZEkFmd/versions/vz6TdXa7/VS-Sable-HoseConnectors-0.1.8-1.21.1.jar";
+							sha512 = "3pbzbsyya1bvai0mjyr56fs9l0wrm7p8a2nzgbkq3f1vyinccf3iv8lxqzi4ii6pvlwidvhj4dkqw7yg3lxb086hzglg2jqfx143kx7";
+						};
           }
         );
       };
