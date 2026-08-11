@@ -57,6 +57,7 @@
 
         home-manager.nixosModules.home-manager
         hyprland.nixosModules.default
+        inputs.nix-citizen.nixosModules.default
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
