@@ -77,12 +77,38 @@
         ./hosts/${hostName}/configuration.nix
       ];
     };
+
+    # KDE Plasma desktop hosts: pulls in Stylix (needed for modules/stylix.nix to
+    # type-check) and a minimal per-user Home Manager profile so Stylix's KDE
+    # target can theme Plasma's colors/widget style/decorations. Skips the
+    # Hyprland/vegard-specific Home Manager profile used by mkDesktopHost.
+    mkPlasmaHost = hostName: username: nixpkgs.lib.nixosSystem {
+      inherit system;
+      specialArgs = { inherit inputs; };
+      modules = [
+        stylix.nixosModules.stylix
+        ./hosts/${hostName}/configuration.nix
+
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.backupFileExtension = "backup";
+
+          home-manager.users.${username} = import ./home-manager/kde-home.nix;
+
+          home-manager.extraSpecialArgs = { inherit inputs; };
+        }
+      ];
+    };
   in
   {
     nixosConfigurations = {
       vex = mkDesktopHost "vex";
       xc = mkDesktopHost "xc";
       laptop = mkDesktopHost "laptop";
+      hulve = mkPlasmaHost "hulve" "torbjorn";
+      pcolai = mkPlasmaHost "pcolai" "nikolai";
       lxc = mkHeadlessHost "lxc";
       lxc-obsidian = mkHeadlessHost "lxc/obsidian";
       lxc-heretic = mkHeadlessHost "lxc/heretic";

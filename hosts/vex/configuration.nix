@@ -15,7 +15,7 @@
     ../../modules/tailscale.nix
     ../../modules/ssh.nix
     ../../modules/sunshine.nix
-    # ../../modules/star-citizen.nix
+    ../../modules/star-citizen.nix
     ../../modules/remote.nix
     ../../modules/hyprland.nix
     ../../modules/jetbrains.nix

@@ -21,6 +21,10 @@
   # Laptop specific settings
   services.libinput.enable = true; # Enable touchpad support
 
+  # Plasma enables power-profiles-daemon by default, which conflicts with
+  # tlp/auto-cpufreq below.
+  services.power-profiles-daemon.enable = lib.mkForce false;
+
   # Power management
   powerManagement.enable = true;
   services.thermald.enable = true;
