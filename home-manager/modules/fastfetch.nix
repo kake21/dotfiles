@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
   programs.fastfetch = {
     enable = true;
@@ -33,8 +33,8 @@
         type = "file";
 
         color = {
-          "1" = "blue";
-          "2" = "magenta";
+          "1" = "#${config.lib.stylix.colors.base0D}";
+          "2" = "#${config.lib.stylix.colors.base01}";
         };
 
         padding = {
