@@ -20,6 +20,7 @@
     ../../modules/hyprland.nix
     ../../modules/jetbrains.nix
     ../../modules/llama-cpp.nix
+    ../../modules/adblock-dns.nix
   ];
 
   networking.hostName = "vex";
