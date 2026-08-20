@@ -53,7 +53,6 @@ in
   imports = [
     inputs.nixcord.homeModules.nixcord
     inputs.spicetify-nix.homeManagerModules.default
-    ../modules/nixvim.nix
     ../modules/obsidian.nix
     ./modules/hyprland.nix
     ./modules/waybar.nix
