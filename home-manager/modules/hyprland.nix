@@ -1,6 +1,5 @@
 { inputs, lib, pkgs, osConfig, ... }:
 let
-  isLaptop = osConfig.networking.hostName == "laptop";
   mod = "SUPER";
   inline = lib.generators.mkLuaInline;
   dsp = cmd: inline "hl.dsp.${cmd}";
@@ -92,13 +91,7 @@ in
         };
       };
 
-      monitor = [
-        { output = "DP-2"; mode = "5120x1440@240"; position = "0x0"; scale = "1"; }
-        { output = "DP-3"; mode = "3840x2160@59.99700"; position = "640x-2160"; scale = "1"; }
-        { output = "HDMI-A-1"; mode = "2560x1440@144.00"; position = "0x0"; scale = "1"; }
-        { output = "DP-5"; mode = "3840x1080@59.97"; position = "3000x0"; scale = "1"; }
-        { output = "DP-4"; mode = "3840x1080@59.97"; position = "3000x0"; scale = "1"; }
-      ];
+      monitor = osConfig.my.hyprland.monitors;
 
       workspace_rule = [
         { workspace = "1"; monitor = "DP-2"; }
