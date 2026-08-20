@@ -3,6 +3,7 @@
 {
   stylix = {
     enable = true;
+    polarity = "dark";
     targets.kmscon.enable = false;
     image = pkgs.fetchurl {
       url = "https://media.starcitizen.tools/8/84/Hawk_SpaceFlight_Concept.jpg?download";
