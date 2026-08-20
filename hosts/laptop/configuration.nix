@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ./hardware-configuration.nix # You'll need to generate this on the laptop
+    ./hardware-configuration.nix
     ../../modules/system.nix
     ../../modules/networking.nix
     ../../modules/users.nix
@@ -38,7 +38,6 @@
 
   # Laptop specific settings
   services.libinput.enable = true; # Enable touchpad support
-
 
   # Power management
   powerManagement.enable = true;
