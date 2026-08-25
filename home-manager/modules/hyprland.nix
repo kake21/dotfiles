@@ -98,6 +98,14 @@ in
         { workspace = "2"; monitor = "DP-3"; }
       ];
 
+      # Ignore maximize requests from apps - a lot of GTK/Electron apps
+      # request "maximize" on startup, which Hyprland otherwise honors by
+      # tiling them to fill the whole workspace (looks like fullscreen).
+      window_rule = {
+        match.class = ".*";
+        suppress_event = "maximize";
+      };
+
       # Runs once on startup, replacing the old exec-once list.
       # (The dbus-update-activation-environment/systemctl handover line is
       # already generated separately by the systemd.enable integration below.)
