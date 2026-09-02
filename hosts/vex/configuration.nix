@@ -21,6 +21,7 @@
     ../../modules/jetbrains.nix
     ../../modules/llama-cpp.nix
     ../../modules/adblock-dns.nix
+    ../../modules/tracker.nix
   ];
 
   networking.hostName = "vex";
