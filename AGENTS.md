@@ -35,11 +35,21 @@ sudo nixos-generate-config --root /mnt
 ## Project Conventions
 
 ### Host-Specific Configuration Pattern
-Use `osConfig.networking.hostName` to branch logic (e.g., `home-manager/home.nix:4,24`):
+Declare an option under the `my.*` namespace and read it from Home Manager as
+`osConfig.my.*`. Prefer this over comparing hostname strings:
 ```nix
-let isLaptop = osConfig.networking.hostName == "laptop";
-in {  services.waybar.enable = osConfig.networking.hostName != "vex";  }
+# modules/options.nix
+options.my.shell.bar.enable = lib.mkOption { type = lib.types.bool; default = false; };
+# hosts/laptop/configuration.nix
+my.shell.bar.enable = true;
+# home-manager/modules/shell.nix
+cfg = osConfig.my.shell;
 ```
+
+**Important:** options the *shared* HM profile reads must be declared in
+`modules/options.nix`, which `mkDesktopHost` imports for every desktop host.
+Declaring such an option inside a feature module that only some hosts import
+makes the other hosts fail to evaluate.
 
 ### Module Organization
 - **System modules** (`modules/*.nix`): System-level, imported in host `configuration.nix`
@@ -56,14 +66,40 @@ Each host's `configuration.nix` imports:
 ## Critical Integration Points
 
 ### Stylix (Theme Management)
-- Central theme source: defined in `flake.nix` inputs
-- Auto-applies to: Firefox, Waybar, Wofi, kitty via `(lib.stylix.colors)` references
+- Central theme source: `modules/stylix.nix` (hand-written base16, accent `base0D`)
+- Auto-applies to: Firefox, Wofi, kitty via `(lib.stylix.colors)` references
 - Pattern: `with config.lib.stylix.colors; ''...#${base01}...''`
+- vshell mirrors the scheme into a generated `Theme.qml` singleton - change
+  colours in `modules/stylix.nix`, never in the QML
 
 ### Hyprland + Home-Manager
-- Display config: `wayland.windowManager.hyprland.settings.monitor` in `home-manager/home.nix:179-182`
-- Keybindings: `bind` array with `$mod` (SUPER) prefix
-- Host-specific touches: Laptop gestures enabled via `lib.optionalAttrs isLaptop` (line 318)
+- Config lives in `home-manager/modules/hyprland.nix`, using the Lua backend
+  (`configType = "lua"`): settings are attrs of `_args` lists built with
+  `lib.generators.mkLuaInline`, not the old string config
+- Display config: `settings.monitor = osConfig.my.hyprland.monitors`, set per host
+- Keybindings: `settings.bind`, each `{ _args = [ "SUPER + F" (exec "firefox") ]; }`
+  using the `exec`/`dsp` helpers at the top of the file
+- Startup commands go in the `on hyprland.start` hook, not `exec-once`
+
+### vshell (Quickshell desktop shell)
+- Replaces Waybar. Bar + quick settings panel in one process
+- Nix layer: `home-manager/modules/shell.nix` generates `Theme.qml` (from Stylix)
+  and `Config.qml` (from `osConfig.my.shell` + store paths for every external
+  binary), merges them with the static tree, and wires `programs.quickshell`
+- QML lives in `home-manager/shell/`; it is *not* generated - edit it directly
+- Runs as a systemd user service bound to `graphical-session.target`
+- Panel opens with `SUPER+ALT+SPACE` (`qs -c vshell ipc call quicksettings toggle`)
+- Bar is opt-in per host via `my.shell.bar.enable` (currently laptop only);
+  the panel is on everywhere
+- Sections hide themselves when their hardware is absent, so the same config
+  works on desktops with no battery/backlight/Bluetooth
+
+### Known rough edge: `xc`
+`xc` runs the shared HM Hyprland profile but does not import
+`modules/hyprland.nix`, so it has no system-level Hyprland, greetd, or portals.
+It needs `environment.pathsToLink` set by hand to satisfy Home Manager's
+`xdg.portal` assertion. Either import the module or stop running the Hyprland
+profile there - the current state is half-configured.
 
 ### Hardware-Specific Branching
 - **Laptop**: NVIDIA PRIME offloading (legacy_580 driver), power management (auto-cpufreq, tlp)
@@ -98,7 +134,10 @@ Each host's `configuration.nix` imports:
 | `flake.nix` | Dependency inputs, host definitions, output schema |
 | `hosts/{hostname}/configuration.nix` | Host-specific system config + module imports |
 | `modules/*.nix` | Reusable system configuration modules |
+| `modules/options.nix` | `my.*` option declarations; imported by `mkDesktopHost` for all desktop hosts |
 | `home-manager/home.nix` | User (vegard) configuration: Hyprland, apps, theming |
+| `home-manager/modules/shell.nix` | Generates the vshell QML config and wires `programs.quickshell` |
+| `home-manager/shell/**.qml` | vshell source: `shell.qml`, `Bar.qml`, `QuickSettings.qml`, `bar/`, `panel/`, `components/` |
 | `modules/nixvim.nix`, `modules/obsidian.nix` | Home-manager-specific modules |
 | `build.log` | Build output logs (git-ignored) |
 | `update.sh` | Quick rebuild script (customize hostname) |

@@ -53,6 +53,10 @@
       specialArgs = { inherit inputs; };
       modules = [
         stylix.nixosModules.stylix
+        # Declares the `my.*` options the shared Home Manager profile reads.
+        # Lives here rather than in per-host imports so no desktop host can
+        # miss one and fail to evaluate.
+        ./modules/options.nix
         ./hosts/${hostName}/configuration.nix
 
         home-manager.nixosModules.home-manager

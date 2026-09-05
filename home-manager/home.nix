@@ -56,7 +56,7 @@ in
     inputs.spicetify-nix.homeManagerModules.default
     ../modules/obsidian.nix
     ./modules/hyprland.nix
-    ./modules/waybar.nix
+    ./modules/shell.nix
     ./modules/mako.nix
     ./modules/firefox.nix
     ./modules/wofi.nix

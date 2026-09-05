@@ -19,6 +19,10 @@
   networking.hostName = "laptop";
   my.username = "vegard";
 
+  # The only host with a bar - battery/wifi/brightness are worth the strip of
+  # screen here, whereas the desktops just use the panel on SUPER+ALT+SPACE.
+  my.shell.bar.enable = true;
+
   # Nvidia PRIME
   hardware.nvidia.prime = {
     offload = {

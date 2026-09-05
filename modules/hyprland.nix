@@ -1,11 +1,9 @@
 { config, lib, pkgs, inputs, ... }:
 
 {
-  options.my.hyprland.monitors = lib.mkOption {
-    type = lib.types.listOf lib.types.attrs;
-    default = [ ];
-    description = "Per-host Hyprland monitor declarations, consumed by home-manager/modules/hyprland.nix.";
-  };
+  # `my.hyprland.monitors` is declared in modules/options.nix, which
+  # mkDesktopHost imports for every desktop host - xc runs the shared HM
+  # Hyprland profile without importing this module.
 
   config = {
     # Enable wayland (Hyprland)

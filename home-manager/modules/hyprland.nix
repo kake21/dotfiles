@@ -119,7 +119,8 @@ in
               hl.exec_cmd("gnome-keyring-daemon --start --components=secrets")
               hl.exec_cmd("hyprsunset")
               hl.exec_cmd("nm-applet --indicator")
-              hl.exec_cmd("waybar")
+              -- The vshell bar/panel is a systemd user service bound to
+              -- graphical-session.target, so it is not started from here.
             end
           '')
         ];
@@ -130,6 +131,9 @@ in
           { _args = [ "${mod} + F" (exec "firefox") ]; }
           { _args = [ "${mod} + Q" (exec "kitty") ]; }
           { _args = [ "${mod} + R" (exec "wofi --show drun") ]; }
+
+          # vshell quick settings
+          { _args = [ "${mod} + ALT + SPACE" (exec "qs -c vshell ipc call quicksettings toggle") ]; }
 
           # Screenshot
           { _args = [ "${mod} + SHIFT + S" (exec "hyprshot -m region") ]; }
