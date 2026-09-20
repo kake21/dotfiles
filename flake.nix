@@ -118,6 +118,7 @@
       lxc-obsidian = mkHeadlessHost "lxc/obsidian";
       lxc-heretic = mkHeadlessHost "lxc/heretic";
       lxc-minecraft = mkHeadlessHost "lxc/minecraft";
+      lxc-runke = mkHeadlessHost "lxc/runke";
       iso = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
