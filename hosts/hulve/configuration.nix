@@ -12,6 +12,7 @@
     ../../modules/ssh.nix
     ../../modules/nvidia.nix
     ../../modules/useremote.nix
+    ../../modules/docker.nix
     ../../modules/kde.nix
   ];
 
