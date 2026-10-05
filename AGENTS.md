@@ -122,6 +122,23 @@ profile there - the current state is half-configured.
 - sops-nix `path` symlinks **delete** whatever already sits at the target.
   Back up real files before first switch
 
+### Installer ISO
+- Built by `mkIsoHost` in `flake.nix`, not the bare `nixosSystem` it used to
+  be: it needs `stylix.nixosModules.stylix`, `modules/options.nix`,
+  home-manager and the Hyprland module to match the desktop hosts
+- Runs `home-manager/iso-home.nix`, a lean profile reusing the shared HM
+  Hyprland/vshell/kitty/wofi/mako/fastfetch modules but skipping obsidian,
+  spicetify, nixcord and the Firefox profile
+- Does **not** import `modules/system.nix` (systemd-boot is meaningless on an
+  ISO) or `modules/desktop.nix` (it pulls `gui-apps.nix`). Locale/keymap/nix
+  settings are replicated locally, the same pattern `hosts/lxc` uses
+- `profiles/installation-device.nix` sets `PermitRootLogin = mkDefault "yes"`
+  while `modules/ssh.nix` sets `mkDefault "no"` -- equal priority, so they
+  conflict. The ISO forces it with `lib.mkForce "no"`
+- **Never enable `my.secrets` here.** The host key is generated at boot so the
+  ISO cannot be a sops recipient, and an image is a distributable artifact.
+  Keep `sops.secrets` empty; only the public admin key belongs in it
+
 ### Hardware-Specific Branching
 - **Laptop**: NVIDIA PRIME offloading (legacy_580 driver), power management (auto-cpufreq, tlp)
 - **Vex**: NVIDIA direct rendering, Ollama CUDA setup, xrandr display config
@@ -166,6 +183,7 @@ profile there - the current state is half-configured.
 | `secrets/hostkeys/*.yaml` | Encrypted SSH host-key backups, admin-key only |
 | `modules/sops.nix` | sops-nix wiring; declares `my.secrets.*` |
 | `home-manager/modules/ssh.nix` | SSH client config; includes the encrypted host blocks |
+| `home-manager/iso-home.nix` | Lean HM profile for the installer ISO |
 | `scripts/sops-add-host.sh` | Enroll a host as a sops recipient |
 | `scripts/sops-hostkey.sh` | Back up / restore a host SSH host key |
 | `update.sh` | Quick rebuild script (customize hostname) |

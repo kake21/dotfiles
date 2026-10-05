@@ -66,13 +66,39 @@ sudo nixos-rebuild switch --flake .#lxc
 
 ## ISO Creation
 
-If you need a portable ISO with WebStorm to install this configuration on a new machine:
+A graphical installer ISO themed and keybound like the desktop hosts: Hyprland
+via greetd (autologin as `vegard`), Stylix, vshell with the bar on, kitty on
+`SUPER+Q`, and the `cli-apps.nix` tool set. Built by `mkIsoHost` in `flake.nix`,
+which layers Stylix/Home Manager/Hyprland over
+`hosts/iso/configuration.nix` and runs the lean `home-manager/iso-home.nix`
+profile.
 
 ```bash
 nix build .#nixosConfigurations.iso.config.system.build.isoImage
 ```
 
-The resulting ISO will be in `result/iso/`.
+The resulting ISO will be in `result/iso/` as `nixos-installer.iso`.
+
+It ships `sops`, `age`, `ssh-to-age`, `gptfdisk`, `parted`, `cryptsetup`,
+`rsync` and `nixos-install-tools`, so a fresh host can be partitioned and
+enrolled in sops without fetching anything first.
+
+sshd is key-only with the admin public key baked in (`PermitRootLogin` forced
+to `no`, overriding the installer profile's `yes`), so an install can be driven
+over SSH from another machine.
+
+> **The ISO carries no secrets, by design.** Its host key is generated at boot,
+> so it can never be a sops recipient; `my.secrets.enable` is explicitly
+> `false` and zero `sops.secrets` are declared. Only the *public* admin key
+> ships. After installing, enroll the new host with
+> `scripts/sops-add-host.sh`.
+
+Two modules are deliberately not imported: `modules/system.nix` (it enables
+systemd-boot, meaningless for an ISO -- the locale/keymap/nix settings are
+replicated locally instead, as `hosts/lxc` does) and `modules/desktop.nix`
+(it pulls `gui-apps.nix`: spotify, freecad, heroic, chromium). The useful
+halves -- `base-desktop.nix`, `audio.nix`, `fonts.nix`, `cli-apps.nix` -- are
+imported directly.
 
 ## Secrets (sops-nix)
 

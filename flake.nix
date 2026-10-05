@@ -88,6 +88,31 @@
       ];
     };
 
+    # Installer ISO. Needs the same Stylix/Home Manager/Hyprland layering as
+    # mkDesktopHost so the live environment matches the installed one, but runs
+    # the lean iso-home.nix profile and skips nix-citizen.
+    mkIsoHost = nixpkgs.lib.nixosSystem {
+      inherit system;
+      specialArgs = { inherit inputs; };
+      modules = [
+        stylix.nixosModules.stylix
+        ./modules/options.nix
+        ./hosts/iso/configuration.nix
+
+        home-manager.nixosModules.home-manager
+        hyprland.nixosModules.default
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.backupFileExtension = "backup";
+
+          home-manager.users.vegard = import ./home-manager/iso-home.nix;
+
+          home-manager.extraSpecialArgs = { inherit inputs; };
+        }
+      ];
+    };
+
     # KDE Plasma desktop hosts: pulls in Stylix (needed for modules/stylix.nix to
     # type-check) and a minimal per-user Home Manager profile so Stylix's KDE
     # target can theme Plasma's colors/widget style/decorations. Skips the
@@ -124,13 +149,7 @@
       lxc-heretic = mkHeadlessHost "lxc/heretic";
       lxc-minecraft = mkHeadlessHost "lxc/minecraft";
       lxc-runke = mkHeadlessHost "lxc/runke";
-      iso = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
-        modules = [
-          ./hosts/iso/configuration.nix
-        ];
-      };
+      iso = mkIsoHost;
     };
   };
 }
