@@ -19,6 +19,9 @@
   networking.hostName = "laptop";
   my.username = "vegard";
 
+  # Enrolled in sops (see .sops.yaml); decrypts secrets/common.yaml.
+  my.secrets.enable = true;
+
   # The only host with a bar - battery/wifi/brightness are worth the strip of
   # screen here, whereas the desktops just use the panel on SUPER+ALT+SPACE.
   my.shell.bar.enable = true;

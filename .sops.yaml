@@ -16,6 +16,7 @@ keys:
 
   # Host keys (ssh-to-age of each host's ssh_host_ed25519_key.pub)
   - &host_vex age18w2nzhfvf2hztgu48vtta7zmxw73amt0zt5re36nskh0mdtqsveql8m3rs
+  - &host_laptop age195ma5erpgcm9c9yfq60aqsxt7cfj6slu4qdac7tlz8f4ckxds4gskq0znh
 
 creation_rules:
   # Host SSH host-key backups: admin only, on purpose. A host cannot be a
@@ -32,3 +33,4 @@ creation_rules:
       - age:
           - *admin_vegard
           - *host_vex
+          - *host_laptop
