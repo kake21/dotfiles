@@ -101,6 +101,27 @@ It needs `environment.pathsToLink` set by hand to satisfy Home Manager's
 `xdg.portal` assertion. Either import the module or stop running the Hyprland
 profile there - the current state is half-configured.
 
+### Secrets (sops-nix)
+- Encrypted at rest in `secrets/`, committed; decrypted at activation into
+  `/run/secrets/`. Recipient rules in `.sops.yaml`
+- Each host decrypts with its own `/etc/ssh/ssh_host_ed25519_key`
+  (`sops.age.sshKeyPaths`); the admin age key is `~/.config/sops/age/keys.txt`
+- `modules/sops.nix` declares `my.secrets.enable` (per-host opt-in) and
+  `my.secrets.tailscale.autoConnect`. It is imported by `modules/ssh.nix` and
+  `modules/tailscale.nix` rather than per host, so the options always exist
+  wherever they are read -- including on hosts that skip `modules/options.nix`
+- **A host must be a recipient before `my.secrets.enable = true`**, else
+  activation fails with `no key could decrypt the data`. Enroll with
+  `scripts/sops-add-host.sh <host>`
+- Secret-dependent config goes in a `lib.mkIf cfg.enable` branch of a
+  `lib.mkMerge`, never at the top level -- unenrolled hosts must still evaluate
+- Public keys stay in plaintext Nix (`adminKeys` in `modules/ssh.nix`) so every
+  host accepts them on rebuild, enrolled or not
+- `secrets/hostkeys/*.yaml` is admin-key only on purpose: a host cannot decrypt
+  its own host key with that key. Restored by hand via `scripts/sops-hostkey.sh`
+- sops-nix `path` symlinks **delete** whatever already sits at the target.
+  Back up real files before first switch
+
 ### Hardware-Specific Branching
 - **Laptop**: NVIDIA PRIME offloading (legacy_580 driver), power management (auto-cpufreq, tlp)
 - **Vex**: NVIDIA direct rendering, Ollama CUDA setup, xrandr display config
@@ -140,5 +161,12 @@ profile there - the current state is half-configured.
 | `home-manager/shell/**.qml` | vshell source: `shell.qml`, `Bar.qml`, `QuickSettings.qml`, `bar/`, `panel/`, `components/` |
 | `modules/nixvim.nix`, `modules/obsidian.nix` | Home-manager-specific modules |
 | `build.log` | Build output logs (git-ignored) |
+| `.sops.yaml` | sops recipient rules (admin key + per-host age keys) |
+| `secrets/common.yaml` | Encrypted shared secrets: Tailscale auth key, SSH keys, private SSH client config |
+| `secrets/hostkeys/*.yaml` | Encrypted SSH host-key backups, admin-key only |
+| `modules/sops.nix` | sops-nix wiring; declares `my.secrets.*` |
+| `home-manager/modules/ssh.nix` | SSH client config; includes the encrypted host blocks |
+| `scripts/sops-add-host.sh` | Enroll a host as a sops recipient |
+| `scripts/sops-hostkey.sh` | Back up / restore a host SSH host key |
 | `update.sh` | Quick rebuild script (customize hostname) |
 

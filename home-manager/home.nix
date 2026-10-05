@@ -62,5 +62,6 @@ in
     ./modules/wofi.nix
     ./modules/kitty.nix
     ./modules/fastfetch.nix
+    ./modules/ssh.nix
   ];
 }

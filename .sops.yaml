@@ -1,0 +1,34 @@
+# Recipient rules for sops-nix. Every encrypted file under secrets/ is matched
+# against creation_rules in order; the first match wins.
+#
+# Two kinds of recipient:
+#   - the admin key (yours), so you can `sops secrets/...` to edit
+#   - a host key, so that host can decrypt at activation time
+#
+# Host keys are the age form of /etc/ssh/ssh_host_ed25519_key.pub. Add a new
+# host with `scripts/sops-add-host.sh <hostname-or-ip>`, which appends the
+# anchor here and re-encrypts the shared files to include it.
+
+keys:
+  # Admin key: ~/.config/sops/age/keys.txt on vex. BACK THIS UP -- without it
+  # you cannot edit (or recover) any secret in this repo.
+  - &admin_vegard age1skpqatjqxwlq0rnz8dur3j4help2pf9qhdfwehz9vs96xz87myzsdclhhz
+
+  # Host keys (ssh-to-age of each host's ssh_host_ed25519_key.pub)
+  - &host_vex age18w2nzhfvf2hztgu48vtta7zmxw73amt0zt5re36nskh0mdtqsveql8m3rs
+
+creation_rules:
+  # Host SSH host-key backups: admin only, on purpose. A host cannot be a
+  # recipient of its own host key -- it would need that key to decrypt it.
+  # These are restored by hand with scripts/sops-hostkey.sh restore <host>.
+  - path_regex: secrets/hostkeys/[^/]+\.yaml$
+    key_groups:
+      - age:
+          - *admin_vegard
+
+  # Shared secrets, decrypted on every enrolled host at activation.
+  - path_regex: secrets/common\.yaml$
+    key_groups:
+      - age:
+          - *admin_vegard
+          - *host_vex

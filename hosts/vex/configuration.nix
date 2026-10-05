@@ -28,6 +28,9 @@
   networking.hostName = "vex";
   my.username = "vegard";
 
+  # Enrolled in sops (see .sops.yaml); decrypts secrets/common.yaml.
+  my.secrets.enable = true;
+
   my.hyprland.monitors = [
     { output = "DP-2"; mode = "5120x1440@240"; position = "0x0"; scale = "1"; bitdepth = 10; }
     { output = "DP-3"; mode = "3840x2160@59.99700"; position = "640x-2160"; scale = "1"; }
