@@ -20,9 +20,12 @@ case "$LXC_NAME" in
   minecraft)
     FLAKE_PATH=".#nixosConfigurations.lxc-minecraft.config.system.build.tarball"
     ;;
+  runke)
+    FLAKE_PATH=".#nixosConfigurations.lxc-runke.config.system.build.tarball"
+    ;;
   *)
     echo "Unknown LXC: $LXC_NAME"
-    echo "Available options: lxc, obsidian, heretic, minecraft"
+    echo "Available options: lxc, obsidian, heretic, minecraft, runke"
     exit 1
     ;;
 esac
