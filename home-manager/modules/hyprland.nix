@@ -93,10 +93,6 @@ in
 
       monitor = osConfig.my.hyprland.monitors;
 
-      workspace_rule = [
-        { workspace = "1"; monitor = "DP-2"; }
-        { workspace = "2"; monitor = "DP-3"; }
-      ];
 
       # Ignore maximize requests from apps - a lot of GTK/Electron apps
       # request "maximize" on startup, which Hyprland otherwise honors by
