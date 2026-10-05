@@ -8,3 +8,8 @@ result-*
 .run
 .aiassistant
 build.log
+# Never commit decrypted secrets. secrets/*.yaml themselves ARE committed --
+# they are sops-encrypted. These patterns catch plaintext staging files.
+*.plain.yaml
+*.dec.yaml
+secrets/**/*.plain
