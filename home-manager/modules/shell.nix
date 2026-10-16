@@ -29,6 +29,13 @@ let
         readonly property color ok:      "#${base0B}"  // base0B - green
         readonly property color accent:  "#${base0D}"  // base0D - primary accent
 
+        // Surfaces are see-through at kitty's background_opacity; Hyprland blurs
+        // behind them via the vshell-* layer rule in hyprland.nix.
+        readonly property real  opacity: ${config.programs.kitty.settings.background_opacity}
+        readonly property color bgGlass:    Qt.rgba(bg.r, bg.g, bg.b, opacity)
+        // Cards sit on the panel, so a lighter tint keeps the stack see-through.
+        readonly property color bgAltGlass: Qt.rgba(bgAlt.r, bgAlt.g, bgAlt.b, opacity / 2)
+
         readonly property string fontFamily: "${config.stylix.fonts.sansSerif.name}"
         readonly property string monoFamily: "${config.stylix.fonts.monospace.name}"
         readonly property int    fontSize:   ${toString fontPx}
@@ -60,6 +67,7 @@ let
         readonly property string hyprlock:      "${lib.getExe config.programs.hyprlock.package}"
         readonly property string systemctl:     "${pkgs.systemd}/bin/systemctl"
         readonly property string cat:           "${pkgs.coreutils}/bin/cat"
+        readonly property string hyprctl:       "${osConfig.programs.hyprland.package}/bin/hyprctl"
 
         // Night light temperature applied when the toggle is on. Note that the
         // time profiles in hypr/hyprsunset.conf (07:30 identity, 22:00 3700K)

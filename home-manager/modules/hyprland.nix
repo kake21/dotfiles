@@ -102,6 +102,14 @@ in
         suppress_event = "maximize";
       };
 
+      # Blur behind the translucent vshell bar/panel. ignore_alpha keeps the
+      # fully transparent corners around the rounded panel unblurred.
+      layer_rule = {
+        match.namespace = "^vshell-.*";
+        blur = true;
+        ignore_alpha = 0.1;
+      };
+
       # Runs once on startup, replacing the old exec-once list.
       # (The dbus-update-activation-environment/systemctl handover line is
       # already generated separately by the systemd.enable integration below.)

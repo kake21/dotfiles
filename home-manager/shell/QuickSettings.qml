@@ -48,7 +48,7 @@ PanelWindow {
     Rectangle {
         anchors.fill: parent
         radius: Theme.radius
-        color: Theme.bg
+        color: Theme.bgGlass
         border.width: 1
         border.color: Theme.sel
 
@@ -72,6 +72,7 @@ PanelWindow {
 
                 VolumeSection {}
                 BrightnessSection {}
+                DisplaySection {}
                 WifiSection {}
                 BluetoothSection {}
                 BatterySection {}

@@ -21,7 +21,7 @@ PanelWindow {
     }
 
     implicitHeight: Config.barHeight
-    color: Theme.bg
+    color: Theme.bgGlass
 
     WlrLayershell.namespace: "vshell-bar"
 

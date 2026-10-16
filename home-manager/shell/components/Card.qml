@@ -12,7 +12,7 @@ Rectangle {
 
     Layout.fillWidth: true
     implicitHeight: col.implicitHeight + Theme.padding * 2
-    color: Theme.bgAlt
+    color: Theme.bgAltGlass
     radius: Theme.radius
 
     ColumnLayout {
