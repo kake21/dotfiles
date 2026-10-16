@@ -1,6 +1,10 @@
 { pkgs, ... }:
 
 {
+  # rofi is unused, and Stylix's rofi target still sets the renamed
+  # `programs.rofi.font`, which warns on every evaluation.
+  home-manager.sharedModules = [ { stylix.targets.rofi.enable = false; } ];
+
   stylix = {
     enable = true;
     polarity = "dark";
