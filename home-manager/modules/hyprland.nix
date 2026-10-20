@@ -1,4 +1,4 @@
-{ inputs, lib, pkgs, osConfig, ... }:
+{ inputs, lib, pkgs, config, osConfig, ... }:
 let
   mod = "SUPER";
   inline = lib.generators.mkLuaInline;
@@ -43,6 +43,7 @@ in
         { name = "ELECTRON_OZONE_PLATFORM_HINT"; value = "auto"; }
         { name = "QT_QPA_PLATFORM"; value = "wayland;xcb"; }
         { name = "GDK_BACKEND"; value = "wayland,x11,*"; }
+        { name = "HYPRSHOT_DIR"; value = "${config.home.homeDirectory}/Pictures/Screenshots"; }
       ];
 
       config = {
