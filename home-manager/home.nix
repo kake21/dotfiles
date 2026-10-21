@@ -55,6 +55,7 @@ in
     inputs.nixcord.homeModules.nixcord
     inputs.spicetify-nix.homeManagerModules.default
     ../modules/obsidian.nix
+    ../modules/nixvim.nix
     ./modules/hyprland.nix
     ./modules/shell.nix
     ./modules/mako.nix

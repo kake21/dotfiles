@@ -32,6 +32,7 @@
       azure-cli.extensions.ssh
     ])
     claude-code
+    android-tools
   ];
 
   # Enable NetworkManager Applet (provides nm-applet and nm-connection-editor)
