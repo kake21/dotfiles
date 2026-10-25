@@ -65,6 +65,7 @@ in
       splitbelow = true;
       clipboard = "unnamedplus";
       wrap = false;
+      cmdheight = 0; # command line only appears while typing : or /
       termguicolors = true;
     };
 
@@ -80,6 +81,9 @@ in
     # lspconfig's :LspEslintFixAll gives up after 1s, which type-aware rules in
     # projectNext regularly exceed, so the fixes were silently dropped.
     extraConfigLuaPre = ''
+      -- Neovim 0.12's new message UI: no "Press ENTER" prompts with cmdheight=0
+      require("vim._core.ui2").enable()
+
       function EslintFix(bufnr)
         bufnr = bufnr == 0 and vim.api.nvim_get_current_buf() or bufnr
         local client = vim.lsp.get_clients({ bufnr = bufnr, name = "eslint" })[1]
