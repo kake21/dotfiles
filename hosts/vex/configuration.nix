@@ -12,6 +12,7 @@
     ../../modules/steam.nix
     ../../modules/stylix.nix
     ../../modules/docker.nix
+    ../../modules/kubernetes.nix
     ../../modules/tailscale.nix
     ../../modules/ssh.nix
     ../../modules/sunshine.nix
