@@ -13,6 +13,10 @@
 
     settings = {
       audio_sink = "sink-sunshine-stereo";
+      # Force wlroots screencopy. Without this Sunshine probes its portal
+      # backend at startup, which pops xdph's share-screen picker at boot and
+      # leaves a stale ScreenCast session that breaks sharing in Vesktop.
+      capture = "wlr";
       # Target the 3rd Wayland monitor (Index 2)
       # This will map to whatever HEADLESS-* monitor Hyprland creates
       output_name = "2";
