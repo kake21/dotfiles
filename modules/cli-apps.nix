@@ -1,28 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  # azure-cli needs fabric, which is marked broken against invoke >= 3. Backport
-  # the upstream fix; drop this once nixpkgs merges it, as the patch will then
-  # fail to apply. https://github.com/NixOS/nixpkgs/pull/582594
-  nixpkgs.overlays = [
-    (final: prev: {
-      pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
-        (pyfinal: pyprev: {
-          fabric = pyprev.fabric.overridePythonAttrs (old: {
-            patches = (old.patches or [ ]) ++ [
-              (final.fetchpatch {
-                url = "https://github.com/fabric/fabric/commit/7fa309db9dd5dac69079c1fb83b6f579555f7d53.patch";
-                hash = "sha256-HxdV1XbsytBYOHV8WqcpKMpqGRkbXD/UlmAFSrmsFTg=";
-              })
-            ];
-            pythonRelaxDeps = [ "invoke" ];
-            meta = old.meta // { broken = false; };
-          });
-        })
-      ];
-    })
-  ];
-
   environment.systemPackages = with pkgs; [
     tree
     github-cli
